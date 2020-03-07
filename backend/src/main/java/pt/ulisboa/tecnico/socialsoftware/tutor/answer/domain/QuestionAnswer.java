@@ -1,6 +1,5 @@
 package pt.ulisboa.tecnico.socialsoftware.tutor.answer.domain;
 
-import pt.ulisboa.tecnico.socialsoftware.tutor.impexp.Importable;
 import pt.ulisboa.tecnico.socialsoftware.tutor.question.domain.Option;
 import pt.ulisboa.tecnico.socialsoftware.tutor.quiz.domain.QuizQuestion;
 
@@ -23,6 +22,14 @@ public class QuestionAnswer {
     @ManyToOne
     @JoinColumn(name = "quiz_answer_id")
     private QuizAnswer quizAnswer;
+
+    @ManyToOne
+    @JoinColumn(name = "quiz_question_id")
+    private TournamentQuestion tournamentQuestion;
+
+    @ManyToOne
+    @JoinColumn(name = "quiz_answer_id")
+    private TournamentAnswer tournamentAnswer;
 
     @ManyToOne
     @JoinColumn(name = "option_id")
@@ -51,6 +58,14 @@ public class QuestionAnswer {
         quizAnswer.addQuestionAnswer(this);
         this.quizQuestion = quizQuestion;
         quizQuestion.addQuestionAnswer(this);
+        this.sequence = sequence;
+    }
+
+    public QuestionAnswer(TournamentAnswer tournamentAnswer, TournamentQuestion tournamentQuestion, int sequence){
+        this.tournamentAnswer = tournamentAnswer;
+        tournamentAnswer.addQuestionAnswer(this);
+        this.tournamentQuestion = tournamentQuestion;
+        tournamentQuestion.addQuestionAnswer(this);
         this.sequence = sequence;
     }
 
