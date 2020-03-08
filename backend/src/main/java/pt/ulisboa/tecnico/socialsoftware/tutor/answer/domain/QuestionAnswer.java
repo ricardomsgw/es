@@ -23,13 +23,6 @@ public class QuestionAnswer {
     @JoinColumn(name = "quiz_answer_id")
     private QuizAnswer quizAnswer;
 
-    @ManyToOne
-    @JoinColumn(name = "quiz_question_id")
-    private TournamentQuestion tournamentQuestion;
-
-    @ManyToOne
-    @JoinColumn(name = "quiz_answer_id")
-    private TournamentAnswer tournamentAnswer;
 
     @ManyToOne
     @JoinColumn(name = "option_id")
@@ -61,13 +54,6 @@ public class QuestionAnswer {
         this.sequence = sequence;
     }
 
-    public QuestionAnswer(TournamentAnswer tournamentAnswer, TournamentQuestion tournamentQuestion, int sequence){
-        this.tournamentAnswer = tournamentAnswer;
-        tournamentAnswer.addQuestionAnswer(this);
-        this.tournamentQuestion = tournamentQuestion;
-        tournamentQuestion.addQuestionAnswer(this);
-        this.sequence = sequence;
-    }
 
     public void remove() {
         quizAnswer.getQuestionAnswers().remove(this);
