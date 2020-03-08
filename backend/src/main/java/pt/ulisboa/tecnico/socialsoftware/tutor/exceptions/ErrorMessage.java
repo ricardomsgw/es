@@ -13,6 +13,13 @@ public enum ErrorMessage {
     TOPIC_CONJUNCTION_NOT_FOUND("Topic Conjunction not found with id %d"),
     COURSE_EXECUTION_NOT_FOUND("Course execution not found with name %d"),
 
+    TOURNAMENT_NO_TITLE("Tournament without title"),
+    TOURNAMENT_WITH_DATA_NO_VALID("Tournament with data not valid"),
+    TOURNAMENT_BY_NO_STUDENT("Tournament is being created by a role no student"),
+    TOURNAMENT_NO_TOPICS("Tournament without topics"),
+    TOURNAMENT_NO_NUMBER_OF_QUESTIONS("Tournament without number of questions"),
+    TOURNAMENT_TITLE_ALREADY_EXISTS("Tournament title already exists"),
+
     COURSE_NOT_FOUND("Course not found with id %s"),
     COURSE_NAME_IS_EMPTY("The course name is empty"),
     COURSE_TYPE_NOT_DEFINED("The course type is not defined"),

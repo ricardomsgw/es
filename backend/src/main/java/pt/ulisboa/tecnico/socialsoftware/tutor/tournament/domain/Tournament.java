@@ -38,7 +38,7 @@ public class Tournament {
     @Column(name = "start_date")
     private LocalDateTime startDate;
 
-    @Column(name = "available_date")
+    @Column(name = "current_date")
     private LocalDateTime currentDate;
 
     @Column(name = "conclusion_date")
@@ -69,7 +69,6 @@ public class Tournament {
         this.key = tournamentDto.getKey();
         setTitle(tournamentDto.getTitle());
         this.startDate = tournamentDto.getCreationDateDate();
-        //setAvailableDate(tournamentDto.getAvailableDateDate());
         setConclusionDate(tournamentDto.getConclusionDateDate());
 
     }
@@ -91,21 +90,27 @@ public class Tournament {
         this.title = title;
     }
 
-    public LocalDateTime getCreationDate() {
+    public LocalDateTime getStartDate() {
         return startDate;
     }
 
-    public void setCreationDate(LocalDateTime creationDate) {
-        this.startDate = creationDate;
+    public void setStartDate(LocalDateTime startDate) {
+        this.startDate = startDate;
     }
 
+    public LocalDateTime getCurrentDate() {
+        return currentDate;
+    }
+
+    public void setCurrentDate(LocalDateTime currentDate) {
+        this.currentDate = currentDate;
+    }
 
     public LocalDateTime getConclusionDate() {
         return conclusionDate;
     }
 
     public void setConclusionDate(LocalDateTime conclusionDate) {
-        checkConclusionDate(conclusionDate);
         this.conclusionDate = conclusionDate;
     }
 
@@ -120,6 +125,10 @@ public class Tournament {
 
     public Set<Topic> getTopics() {
         return topics;
+    }
+
+    public void setTopics(Topic topic){
+        topics.add(topic);
     }
 
     public Integer getNumberOfQuestions(){

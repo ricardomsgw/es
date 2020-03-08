@@ -15,14 +15,10 @@ import java.util.List;
 public class TournamentDto implements Serializable {
     private Integer id;
     private String title;
-    private String creationDate = null;
-    private String availableDate = null;
+    private String startDate = null;
+    private String currentDate = null;
     private String conclusionDate = null;
-    private Quiz.QuizType type;
-    private Integer series;
-    private String version;
     private int numberOfQuestions;
-    private int numberOfAnswers;
     private int numberOfTopics;
     private List<QuestionDto> questions = new ArrayList<>();
     private List<TopicDto> topics = new ArrayList<>();
@@ -36,9 +32,9 @@ public class TournamentDto implements Serializable {
     public TournamentDto(Tournament tournament){
         this.id = tournament.getId();
         this.title = tournament.getTitle();
-        this.numberOfQuestions = tournament.getTournamentQuestions().size();
+        this.numberOfQuestions = tournament.getNumberOfQuestions();
         //this.numberOfAnswers = tournament.getTournamentAnswers().size();
-        this.numberOfTopics = tournament.getTournamentTopics().size();
+        this.numberOfTopics = tournament.getTopics().size();
 
     }
 
@@ -66,20 +62,36 @@ public class TournamentDto implements Serializable {
         this.title = title;
     }
 
-    public String getCreationDate() {
-        return creationDate;
+    public void setNumberOfQuestions(Integer numberOfQuestions){
+        this.numberOfQuestions = numberOfQuestions;
     }
 
-    public void setCreationDate(String creationDate) {
-        this.creationDate = creationDate;
+    public Integer getNumberOfQuestions(){
+        return numberOfQuestions;
     }
 
-    public String getAvailableDate() {
-        return availableDate;
+    public void setTopics(TopicDto topic){
+        this.topics.add(topic);
     }
 
-    public void setAvailableDate(String availableDate) {
-        this.availableDate = availableDate;
+    public List<TopicDto> getTopics(){
+        return topics;
+    }
+
+    public String getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(String startDate) {
+        this.startDate = startDate;
+    }
+
+    public String getCurrentDate() {
+        return currentDate;
+    }
+
+    public void setCurrentDate(String currentDate) {
+        this.currentDate = currentDate;
     }
 
     public String getConclusionDate() {
@@ -95,17 +107,17 @@ public class TournamentDto implements Serializable {
     }
 
     public LocalDateTime getCreationDateDate() {
-        if (getCreationDate() == null || getCreationDate().isEmpty()) {
+        if (getStartDate() == null || getStartDate().isEmpty()) {
             return null;
         }
-        return LocalDateTime.parse(getCreationDate(), formatter);
+        return LocalDateTime.parse(getStartDate(), formatter);
     }
 
-    public LocalDateTime getAvailableDateDate() {
-        if (getAvailableDate() == null || getAvailableDate().isEmpty()) {
+    public LocalDateTime getCurrentDateDate() {
+        if (getCurrentDate() == null || getCurrentDate().isEmpty()) {
             return null;
         }
-        return LocalDateTime.parse(getAvailableDate(), formatter);
+        return LocalDateTime.parse(getCurrentDate(), formatter);
     }
 
     public LocalDateTime getConclusionDateDate() {
