@@ -1,5 +1,6 @@
 package pt.ulisboa.tecnico.socialsoftware.tutor.tournament;
 
+import pt.ulisboa.tecnico.socialsoftware.tutor.course.CourseExecution;
 import pt.ulisboa.tecnico.socialsoftware.tutor.question.domain.Topic;
 
 import javax.persistence.*;
@@ -27,8 +28,15 @@ public class Tournament {
     @Column(name = "conclusion_date")
     private LocalDateTime conclusionDate;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "course", fetch=FetchType.LAZY, orphanRemoval=true)
+    /*@OneToMany(cascade = CascadeType.ALL, mappedBy = "course", fetch=FetchType.LAZY, orphanRemoval=true)
+    private Set<Topic> topics = new HashSet<>();*/
+
+    @ManyToMany(mappedBy="tournaments")
     private Set<Topic> topics = new HashSet<>();
+
+    @ManyToOne
+    @JoinColumn(name = "course_execution_id")
+    private CourseExecution courseExecution;
 
     public Tournament() {}
 

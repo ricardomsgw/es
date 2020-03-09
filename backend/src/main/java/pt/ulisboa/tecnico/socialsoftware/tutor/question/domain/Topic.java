@@ -36,6 +36,9 @@ public class Topic {
     @ManyToMany(cascade = CascadeType.ALL, fetch=FetchType.EAGER)
     private List<TopicConjunction> topicConjunctions = new ArrayList<>();
 
+    @ManyToMany
+    private Set<Tournament> tournaments = new HashSet<>();
+
     @ManyToOne
     @JoinColumn(name = "course_id")
     private Course course;
