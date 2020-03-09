@@ -1,7 +1,7 @@
 package pt.ulisboa.tecnico.socialsoftware.tutor.tournament.service
 
-import pt.ulisboa.tecnico.socialsoftware.tutor.tournament.domain.Tournament
-import pt.ulisboa.tecnico.socialsoftware.tutor.tournament.repository.TournamentService
+import pt.ulisboa.tecnico.socialsoftware.tutor.tournament.Tournament
+import pt.ulisboa.tecnico.socialsoftware.tutor.tournament.TournamentService
 import spock.lang.Specification
 
 
