@@ -9,7 +9,7 @@ import static pt.ulisboa.tecnico.socialsoftware.tutor.exceptions.ErrorMessage.*;
 
 public class TournamentService {
 
-    public void createTournament(){
-
+    public TournamentDto createTournament(TournamentDto tournamentDto){
+        return null;
     }
 }
