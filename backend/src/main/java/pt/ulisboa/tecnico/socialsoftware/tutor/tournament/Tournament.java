@@ -1,20 +1,29 @@
 package pt.ulisboa.tecnico.socialsoftware.tutor.tournament;
 
+import pt.ulisboa.tecnico.socialsoftware.tutor.course.Course;
 import pt.ulisboa.tecnico.socialsoftware.tutor.course.CourseExecution;
+import pt.ulisboa.tecnico.socialsoftware.tutor.exceptions.TutorException;
 import pt.ulisboa.tecnico.socialsoftware.tutor.question.domain.Topic;
-
+import static pt.ulisboa.tecnico.socialsoftware.tutor.exceptions.ErrorMessage.*;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
+import static pt.ulisboa.tecnico.socialsoftware.tutor.exceptions.ErrorMessage.COURSE_EXECUTION_ACRONYM_IS_EMPTY;
+
 @Entity
 @Table(name = "tournaments")
 public class Tournament {
 
+    public enum Status {CREATED, OPENED, CLOSED, CANCELED}
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+
+    @Enumerated(EnumType.STRING)
+    private Tournament.Status status;
 
     @Column(name = "number_of_questions")
     private Integer numberOfQuestions;
@@ -40,10 +49,43 @@ public class Tournament {
 
     public Tournament() {}
 
-    public Tournament(Integer numberOfQuestions, LocalDateTime startDate, LocalDateTime conclusionDate) {
+    public Tournament(Integer numberOfQuestions, LocalDateTime startDate, LocalDateTime conclusionDate, Set<Topic> topics) {
+
+        if (numberOfQuestions == 0) {
+            throw new TutorException(TOURNAMENT_NO_NUMBER_OF_QUESTIONS);
+        }
+
+        if (!checkStartDate(startDate)) {
+            throw new TutorException(TOURNAMENT_WITH_DATA_NO_VALID);
+        }
+
+        if (!checkConclusionDate(conclusionDate)) {
+            throw new TutorException(TOURNAMENT_WITH_DATA_NO_VALID);
+        }
+
+        if (topics == null) {
+            throw new TutorException(TOURNAMENT_NO_TOPICS);
+        }
         this.numberOfQuestions = numberOfQuestions;
         this.startDate = startDate;
         this.conclusionDate = conclusionDate;
+        this.status = Status.CREATED;
+        this.topics = topics;
+
+    }
+
+    public boolean checkStartDate (LocalDateTime startDate) {
+        if (currentDate != null && startDate!= null && startDate.isBefore(currentDate)){
+            return false;
+        }
+        return true;
+    }
+
+    public boolean checkConclusionDate (LocalDateTime conclusionDate) {
+        if (startDate != null && conclusionDate!= null && conclusionDate.isBefore(startDate)){
+            return false;
+        }
+        return true;
     }
 
     public Integer getId() {
@@ -67,6 +109,9 @@ public class Tournament {
     }
 
     public void setConclusionDate(LocalDateTime conclusionDate) {
+        if(!checkConclusionDate(conclusionDate)){
+            throw new TutorException(TOURNAMENT_WITH_DATA_NO_VALID);
+        }
         this.conclusionDate = conclusionDate;
     }
 
@@ -83,6 +128,34 @@ public class Tournament {
     }
 
     public void setStartDate(LocalDateTime startDate) {
+        if(!checkStartDate(startDate)){
+            throw new TutorException(TOURNAMENT_WITH_DATA_NO_VALID);
+        }
         this.startDate = startDate;
+    }
+
+    public Tournament.Status getStatus() {
+        return status;
+    }
+
+    public void setStatus(Tournament.Status status) {
+        this.status = status;
+    }
+
+    public void openTournament(){
+        if (this.status != Status.CREATED) {
+            throw new TutorException(TOURNAMENT_IS_NOT_CREATED);
+        }
+        Tournament.Status status = Status.OPENED;
+        setStatus(status);
+    }
+
+    public CourseExecution getCourseExecution() {
+        return courseExecution;
+    }
+
+    public void setCourseExecution(CourseExecution courseExecution) {
+        this.courseExecution = courseExecution;
+        courseExecution.addTournament(this);
     }
 }

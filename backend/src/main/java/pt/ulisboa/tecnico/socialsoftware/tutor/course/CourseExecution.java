@@ -123,9 +123,9 @@ public class CourseExecution {
         return assessments;
     }
 
-    /*public Set<Tournament> getTournaments() {
+    public Set<Tournament> getTournaments() {
         return tournaments;
-    }*/
+    }
 
     public void addQuiz(Quiz quiz) {
         quizzes.add(quiz);
@@ -135,9 +135,9 @@ public class CourseExecution {
         assessments.add(assessment);
     }
 
-    /*public void addTournament(Tournament tournament) {
+    public void addTournament(Tournament tournament) {
         tournaments.add(tournament);
-    }*/
+    }
 
     public void addUser(User user) {
         users.add(user);

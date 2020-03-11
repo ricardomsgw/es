@@ -2,11 +2,13 @@ package pt.ulisboa.tecnico.socialsoftware.tutor.tournament;
 
 import org.springframework.data.annotation.Transient;
 import pt.ulisboa.tecnico.socialsoftware.tutor.question.dto.TopicDto;
+import pt.ulisboa.tecnico.socialsoftware.tutor.quiz.domain.Quiz;
 
 import java.io.Serializable;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class TournamentDto implements Serializable {
 
@@ -16,6 +18,8 @@ public class TournamentDto implements Serializable {
     private String startDate = null;
     private String currentDate = null;
     private String conclusionDate = null;
+    private Tournament.Status status;
+    private int courseExecutionId;
 
     @Transient
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
@@ -26,6 +30,7 @@ public class TournamentDto implements Serializable {
 
         this.tournamentId = tournament.getId();
         this.numberOfQuestions = tournament.getNumberOfQuestions();
+        this.topics = tournament.getTopics().stream().map(topic -> { TopicDto topicDto = new TopicDto(topic); return topicDto; }).collect(Collectors.toList());
         if (tournament.getStartDate() != null)
             this.startDate = tournament.getStartDate().format(formatter);
         if (tournament.getCurrentDate() != null)
@@ -74,5 +79,19 @@ public class TournamentDto implements Serializable {
 
     public void setTopics(TopicDto topic) { this.topics.add(topic); }
 
+    public Tournament.Status getStatus() {
+        return status;
+    }
 
+    public void setStatus(Tournament.Status status) {
+        this.status = status;
+    }
+
+    public int getCourseExecutionId() {
+        return courseExecutionId;
+    }
+
+    public void setCourseExecutionId(int courseExecutionId) {
+        this.courseExecutionId = courseExecutionId;
+    }
 }
