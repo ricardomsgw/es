@@ -20,6 +20,8 @@ import java.util.stream.Collectors;
 public class User implements UserDetails, Importable {
 
 
+
+
     public enum Role {STUDENT, TEACHER, ADMIN}
 
     @Id
@@ -161,6 +163,14 @@ public class User implements UserDetails, Importable {
 
     public void setCourseExecutions(Set<CourseExecution> courseExecutions) {
         this.courseExecutions = courseExecutions;
+    }
+
+    public Set<Tournament> getTournaments() {
+        return tournaments;
+    }
+
+    public void setTournaments(Set<Tournament> tournaments) {
+        this.tournaments = tournaments;
     }
 
     public Integer getNumberOfTeacherQuizzes() {

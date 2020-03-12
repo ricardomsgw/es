@@ -5,7 +5,6 @@ import pt.ulisboa.tecnico.socialsoftware.tutor.course.CourseExecution;
 import pt.ulisboa.tecnico.socialsoftware.tutor.exceptions.TutorException;
 import pt.ulisboa.tecnico.socialsoftware.tutor.question.domain.Topic;
 import pt.ulisboa.tecnico.socialsoftware.tutor.user.User;
-
 import static pt.ulisboa.tecnico.socialsoftware.tutor.exceptions.ErrorMessage.*;
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -107,6 +106,9 @@ public class Tournament {
     public void setNumberOfQuestions(Integer numberOfQuestions) { this.numberOfQuestions = numberOfQuestions; }
 
 
+    public void setTopics(Set<Topic> topics) {
+        this.topics = topics;
+    }
 
     public LocalDateTime getConclusionDate() {
         return conclusionDate;
@@ -171,8 +173,9 @@ public class Tournament {
 
     public Set<User> getUsers(){ return users;}
 
-    public void addUser(User user){
+    public void addUser(User user) {
         if (status != Status.OPENED)
             throw new TutorException(TOURNAMENT_NOT_OPEN);
-        users.add(user); }
+        users.add(user);
+    }
 }
