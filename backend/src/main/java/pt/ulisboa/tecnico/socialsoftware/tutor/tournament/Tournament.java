@@ -4,6 +4,8 @@ import pt.ulisboa.tecnico.socialsoftware.tutor.course.Course;
 import pt.ulisboa.tecnico.socialsoftware.tutor.course.CourseExecution;
 import pt.ulisboa.tecnico.socialsoftware.tutor.exceptions.TutorException;
 import pt.ulisboa.tecnico.socialsoftware.tutor.question.domain.Topic;
+import pt.ulisboa.tecnico.socialsoftware.tutor.user.User;
+
 import static pt.ulisboa.tecnico.socialsoftware.tutor.exceptions.ErrorMessage.*;
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -40,8 +42,12 @@ public class Tournament {
     /*@OneToMany(cascade = CascadeType.ALL, mappedBy = "course", fetch=FetchType.LAZY, orphanRemoval=true)
     private Set<Topic> topics = new HashSet<>();*/
 
-    @ManyToMany(mappedBy="tournaments")
+    @ManyToMany(mappedBy= "tournaments")
     private Set<Topic> topics = new HashSet<>();
+
+    @ManyToMany(mappedBy= "tournaments")
+    private Set<User> users = new HashSet<>();
+
 
     @ManyToOne
     @JoinColumn(name = "course_execution_id")
@@ -100,9 +106,7 @@ public class Tournament {
 
     public void setNumberOfQuestions(Integer numberOfQuestions) { this.numberOfQuestions = numberOfQuestions; }
 
-    public Set<Topic> getTopics() { return topics; }
 
-    public void setTopics(Topic topic) { this.topics.add(topic); }
 
     public LocalDateTime getConclusionDate() {
         return conclusionDate;
@@ -158,4 +162,17 @@ public class Tournament {
         this.courseExecution = courseExecution;
         courseExecution.addTournament(this);
     }
+
+    public Set<Topic> getTopics() { return topics; }
+
+    public void addTopic(Topic topic) {
+        topics.add(topic);
+    }
+
+    public Set<User> getUsers(){ return users;}
+
+    public void addUser(User user){
+        if (status != Status.OPENED)
+            throw new TutorException(TOURNAMENT_NOT_OPEN);
+        users.add(user); }
 }

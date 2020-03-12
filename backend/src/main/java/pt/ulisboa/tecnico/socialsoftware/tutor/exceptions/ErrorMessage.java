@@ -13,6 +13,9 @@ public enum ErrorMessage {
     TOPIC_CONJUNCTION_NOT_FOUND("Topic Conjunction not found with id %d"),
     COURSE_EXECUTION_NOT_FOUND("Course execution not found with name %d"),
 
+    TOURNAMENT_ALREADY_JOINED("User already joined this tournament"),
+    TOURNAMENT_NOT_OPEN("Tournament is not open"),
+    TOURNAMENT_NOT_ELEGIBLE("User not elegible for this tournament"),
     TOURNAMENT_NO_TITLE("Tournament without title"),
     TOURNAMENT_WITH_DATA_NO_VALID("Tournament with data not valid"),
     TOURNAMENT_BY_NO_STUDENT("Tournament is being created by a role no student"),
