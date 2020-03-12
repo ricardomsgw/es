@@ -39,11 +39,11 @@ public class TournamentDto implements Serializable {
             this.conclusionDate = tournament.getConclusionDate().format(formatter);
     }
 
-    public int getCourseId() {
+    public Integer getId() {
         return tournamentId;
     }
 
-    public void setCourseId(int tournamentId) {
+    public void setId(int tournamentId) {
         this.tournamentId = tournamentId;
     }
 
@@ -77,7 +77,7 @@ public class TournamentDto implements Serializable {
 
     public List<TopicDto> getTopics() { return topics; }
 
-    public void setTopics(TopicDto topic) { this.topics.add(topic); }
+    public void setTopics(List<TopicDto> topics) { this.topics = topics; }
 
     public Tournament.Status getStatus() {
         return status;

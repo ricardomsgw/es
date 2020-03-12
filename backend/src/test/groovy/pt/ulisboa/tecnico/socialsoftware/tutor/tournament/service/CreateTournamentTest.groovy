@@ -1,12 +1,20 @@
 package pt.ulisboa.tecnico.socialsoftware.tutor.tournament
 
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
+import org.springframework.boot.test.context.TestConfiguration
+import org.springframework.context.annotation.Bean
 import pt.ulisboa.tecnico.socialsoftware.tutor.course.Course
 import pt.ulisboa.tecnico.socialsoftware.tutor.course.CourseDto
 import pt.ulisboa.tecnico.socialsoftware.tutor.course.CourseExecution
+import pt.ulisboa.tecnico.socialsoftware.tutor.course.CourseExecutionRepository
+import pt.ulisboa.tecnico.socialsoftware.tutor.course.CourseRepository
+import pt.ulisboa.tecnico.socialsoftware.tutor.course.CourseService
 import pt.ulisboa.tecnico.socialsoftware.tutor.exceptions.ErrorMessage
 import pt.ulisboa.tecnico.socialsoftware.tutor.exceptions.TutorException
 import pt.ulisboa.tecnico.socialsoftware.tutor.question.dto.TopicDto
 import pt.ulisboa.tecnico.socialsoftware.tutor.user.User
+import pt.ulisboa.tecnico.socialsoftware.tutor.user.UserRepository
 import spock.lang.Specification
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter
@@ -21,6 +29,8 @@ import static pt.ulisboa.tecnico.socialsoftware.tutor.exceptions.ErrorMessage.CO
 import static pt.ulisboa.tecnico.socialsoftware.tutor.exceptions.ErrorMessage.TOURNAMENT_NO_NUMBER_OF_QUESTIONS
 import static pt.ulisboa.tecnico.socialsoftware.tutor.exceptions.ErrorMessage.TOURNAMENT_WITH_DATA_NO_VALID
 
+
+@DataJpaTest
 class CreateTournament extends Specification{
 
     static final Integer TOURNAMENT_NUMBER_OF_QUESTIONS = 3;
@@ -31,49 +41,72 @@ class CreateTournament extends Specification{
     public static final String START_DATE = "2020-06-10 03:20"
     public static final String CONCLUSION_DATE = "2020-06-11 03:20"
 
-    def tournamentService
+    @Autowired
+    TournamentService tournamentService
+
+    @Autowired
+    CourseRepository courseRepository
+
+    @Autowired
+    CourseExecutionRepository courseExecutionRepository
+
+    @Autowired
+    TournamentRepository tournamentRepository
+
+    @Autowired
+    UserRepository userRepository
+
     def startDate
     def conclusionDate
     def currentDate
     def formatter
+    def tournament
+    def course
+    def courseExecution
+    def topic
 
     def setup() {
-        tournamentService = new TournamentService()
+        formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")
+        tournament = new TournamentDto()
+        def user = new User()
+        topic = new TopicDto()
+
+        course = new Course(COURSE_NAME, Course.Type.TECNICO)
+        courseRepository.save(course)
+
+        courseExecution = new CourseExecution();
+        course.setId(COURSE_EXECUTION_ID);
+        courseExecutionRepository.save(courseExecution)
+
+        User.Role role = User.Role.STUDENT
+        user.setRole(role)
+
+        currentDate = LocalDateTime.now()
+        startDate = LocalDateTime.now()
+        conclusionDate = LocalDateTime.now().plusDays(1)
+
     }
 
     def "create a tournament"() {
         given: 'a tournament with title, number of questions, topics and dates'
-        formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")
-        def tournament = new TournamentDto()
-        def user = new User()
-        def topic = new TopicDto()
-        def course = new CourseExecution();
-        course.setId(COURSE_EXECUTION_ID);
-        User.Role role = User.Role.STUDENT
-        user.setRole(role)
         tournament.setNumberOfQuestions(TOURNAMENT_NUMBER_OF_QUESTIONS)
-        tournament.setTopics(topic)
-        tournament.setStatus(Tournament.Status.CREATED)
-        currentDate = LocalDateTime.now()
-        startDate = LocalDateTime.now()
-        conclusionDate = LocalDateTime.now().plusDays(1)
+        tournament.getTopics().add(topic)
         tournament.setStartDate(startDate.format(formatter))
         tournament.setCurrentDate(currentDate.format(formatter))
         tournament.setConclusionDate(conclusionDate.format(formatter))
         tournament.setCourseExecutionId(course.getId());
 
         when:
-        def result = tournamentService.createTournament(tournament)
+        def result = tournamentService.createTournament((TournamentDto) tournament)
 
         then: "the data are correct to create the tournament"
-        Tournament.Status status = Tournament.Status.CREATED
-        result.getTitle() == TOURNAMENT_TITLE
+        result.getStatus() == Tournament.Status.CREATED
         result.getStartDate() == startDate.format(formatter)
         result.getConclusionDate() == conclusionDate.format(formatter)
         result.getNumberOfQuestions() == TOURNAMENT_NUMBER_OF_QUESTIONS
         result.getTopics().size() == 1
         result.getCourseExecutionId() == COURSE_EXECUTION_ID
-        result.getStatus() == status
+
     }
 
 
@@ -281,6 +314,16 @@ class CreateTournament extends Specification{
         TOURNAMENT_NUMBER_OF_QUESTIONS  | "      "       | CONCLUSION_DATE     || TOURNAMENT_WITH_DATA_NO_VALID
         TOURNAMENT_NUMBER_OF_QUESTIONS  | START_DATE     | null                || TOURNAMENT_WITH_DATA_NO_VALID
         TOURNAMENT_NUMBER_OF_QUESTIONS  | START_DATE     | "      "            || TOURNAMENT_WITH_DATA_NO_VALID
+
+    }
+
+    @TestConfiguration
+    static class TournamentServiceImplTestContextConfiguration {
+
+        @Bean
+        TournamentService tournamentService() {
+            return new TournamentService()
+        }
 
     }
 

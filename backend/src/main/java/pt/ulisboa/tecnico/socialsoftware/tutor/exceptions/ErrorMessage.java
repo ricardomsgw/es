@@ -21,6 +21,7 @@ public enum ErrorMessage {
     TOURNAMENT_TITLE_ALREADY_EXISTS("Tournament title already exists"),
     TOURNAMENT_IS_NOT_CREATED("Tournament is not created"),
     TOURNAMENT_TOPICS_ARE_NOT_VALID("Topics of the tournament are not valid"),
+    TOURNAMENT_NOT_FOUND("Tournament not found"),
 
     COURSE_NOT_FOUND("Course not found with id %s"),
     COURSE_NAME_IS_EMPTY("The course name is empty"),

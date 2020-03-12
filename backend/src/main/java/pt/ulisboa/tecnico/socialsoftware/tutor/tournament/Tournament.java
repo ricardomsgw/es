@@ -102,7 +102,9 @@ public class Tournament {
 
     public Set<Topic> getTopics() { return topics; }
 
-    public void setTopics(Topic topic) { this.topics.add(topic); }
+    public void setTopics(Set<Topic> topics) {
+        this.topics = topics;
+    }
 
     public LocalDateTime getConclusionDate() {
         return conclusionDate;
