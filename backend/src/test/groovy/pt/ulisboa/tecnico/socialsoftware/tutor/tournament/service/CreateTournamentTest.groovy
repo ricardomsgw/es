@@ -92,6 +92,7 @@ class CreateTournament extends Specification{
 
         User.Role role = User.Role.STUDENT
         user.setRole(role)
+        user.addCourseExecutions(courseExecution)
 
         currentDate = LocalDateTime.now()
         startDate = LocalDateTime.now().plusDays(1)

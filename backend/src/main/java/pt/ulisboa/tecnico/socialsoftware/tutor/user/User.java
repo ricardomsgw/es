@@ -165,12 +165,17 @@ public class User implements UserDetails, Importable {
         this.courseExecutions = courseExecutions;
     }
 
+    public void addCourseExecutions(CourseExecution courseExecution){
+        this.courseExecutions.add(courseExecution);
+    }
+
+
     public Set<Tournament> getTournaments() {
         return tournaments;
     }
 
-    public void setTournaments(Set<Tournament> tournaments) {
-        this.tournaments = tournaments;
+    public void addTournaments(Tournament tournament) {
+        this.tournaments.add(tournament);
     }
 
     public Integer getNumberOfTeacherQuizzes() {

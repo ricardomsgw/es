@@ -3,6 +3,7 @@ package pt.ulisboa.tecnico.socialsoftware.tutor.tournament;
 import org.springframework.data.annotation.Transient;
 import pt.ulisboa.tecnico.socialsoftware.tutor.question.dto.TopicDto;
 import pt.ulisboa.tecnico.socialsoftware.tutor.quiz.domain.Quiz;
+import pt.ulisboa.tecnico.socialsoftware.tutor.user.dto.UserDto;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -16,6 +17,7 @@ public class TournamentDto implements Serializable {
     private Integer tournamentId;
     private int numberOfQuestions;
     private List<TopicDto> topics = new ArrayList<>();
+    private List<UserDto> users = new ArrayList<>();
     private String startDate = null;
     private String currentDate = null;
     private String conclusionDate = null;
@@ -33,6 +35,7 @@ public class TournamentDto implements Serializable {
         this.status = tournament.getStatus();
         this.courseExecutionId = tournament.getCourseExecution().getId();
         this.numberOfQuestions = tournament.getNumberOfQuestions();
+        this.users = tournament.getUsers().stream().map(user -> { UserDto userDto = new UserDto(user); return userDto; }).collect(Collectors.toList());
         this.topics = tournament.getTopics().stream().map(topic -> { TopicDto topicDto = new TopicDto(topic); return topicDto; }).collect(Collectors.toList());
         if (tournament.getStartDate() != null)
             this.startDate = tournament.getStartDate().format(formatter);
@@ -86,6 +89,12 @@ public class TournamentDto implements Serializable {
     public int getNumberOfQuestions() { return numberOfQuestions; }
 
     public void setNumberOfQuestions(int numberOfQuestions) { this.numberOfQuestions = numberOfQuestions; }
+
+    public List<UserDto> getUsers() { return users;    }
+
+    public void setUsers(List<UserDto> users) { this.users = users;  }
+
+    public void addUser(UserDto user){ this.users.add(user);}
 
     public List<TopicDto> getTopics() { return topics; }
 

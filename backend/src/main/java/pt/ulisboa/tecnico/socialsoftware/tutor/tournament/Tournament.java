@@ -8,6 +8,7 @@ import pt.ulisboa.tecnico.socialsoftware.tutor.user.User;
 import static pt.ulisboa.tecnico.socialsoftware.tutor.exceptions.ErrorMessage.*;
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 import java.sql.Date;
@@ -189,6 +190,15 @@ public class Tournament {
     public void addUser(User user) {
         if (status != Status.OPENED)
             throw new TutorException(TOURNAMENT_NOT_OPEN);
+        if (user.getRole() != User.Role.STUDENT)
+            throw new TutorException(TOURNAMENT_NOT_ELEGIBLE);
+        CourseExecution courseExec = getCourseExecution();
+        Set<CourseExecution> usercourseexecs = user.getCourseExecutions();
+        if (!(usercourseexecs.contains(courseExec)))
+            throw new TutorException(TOURNAMENT_NOT_ELEGIBLE);
+        if (this.getUsers().contains(user))
+            throw new TutorException(TOURNAMENT_ALREADY_JOINED);
         users.add(user);
+        user.addTournaments(this);
     }
 }

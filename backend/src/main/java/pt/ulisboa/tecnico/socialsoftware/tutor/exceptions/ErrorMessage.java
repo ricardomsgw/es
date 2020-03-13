@@ -13,6 +13,7 @@ public enum ErrorMessage {
     TOPIC_CONJUNCTION_NOT_FOUND("Topic Conjunction not found with id %d"),
     COURSE_EXECUTION_NOT_FOUND("Course execution not found with name %d"),
 
+    TOURNAMENT_INVALID_CREATOR("User can not create tournaments of this course"),
     TOURNAMENT_ALREADY_JOINED("User already joined this tournament"),
     TOURNAMENT_NOT_OPEN("Tournament is not open"),
     TOURNAMENT_NOT_ELEGIBLE("User not elegible for this tournament"),
