@@ -194,11 +194,13 @@ public class Tournament {
 
     public Set<User> getUsers(){ return users;}
 
+    
     public void addUser(User user) {
         checkToAddUser(user);
         users.add(user);
         user.addTournaments(this);
     }
+
 
     private void checkToAddUser(User user) {
         if (status != Status.OPENED)

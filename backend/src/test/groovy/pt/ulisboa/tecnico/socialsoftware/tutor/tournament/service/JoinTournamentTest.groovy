@@ -63,6 +63,17 @@ class JoinTournament extends Specification {
         courseExecutionRepository.save(courseExecution)
 
         formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")
+
+        tournament = CreateOpenTournament(courseExecution)
+        tournamentRepository.save(tournament)
+
+        user = new User()
+        user.setKey(1)
+        userRepository.save(user)
+
+    }
+
+    private Tournament CreateOpenTournament(CourseExecution courseExecution) {
         topic = new Topic()
 
 
@@ -78,16 +89,7 @@ class JoinTournament extends Specification {
         tournament.setStatus(Tournament.Status.OPENED)
         tournament.setNumberOfQuestions(TOURNAMENT_NUMBER_OF_QUESTIONS)
         tournament.getTopics().add(topic)
-        tournamentRepository.save(tournament)
-
-        user = new User()
-        user.setKey(1)
-        userRepository.save(user)
-
-
-
-
-
+        tournament
     }
 
     def "student joins open tournament"(){
