@@ -112,6 +112,7 @@ class CreateTournament extends Specification{
         def result = tournamentService.createTournament((TournamentDto) tournament)
 
         then: "the data are correct to create the tournament"
+        tournamentRepository.count() == 1L
         result.getStatus() == Tournament.Status.CREATED
         result.getStartDate() == startDate.format(formatter)
         result.getConclusionDate() == conclusionDate.format(formatter)
@@ -136,6 +137,7 @@ class CreateTournament extends Specification{
         then: "Tournament is not consistent because doesn't have start date to create"
         def exception = thrown(TutorException)
         exception.getErrorMessage() == TOURNAMENT_WITH_DATA_NO_VALID
+        tournamentRepository.count() == 0L
     }
 
     def "create a tournament with conclusion date before start date"(){
@@ -153,6 +155,7 @@ class CreateTournament extends Specification{
         then: "Tournament is not consistent because conclusion date is before start date"
         def exception = thrown(TutorException)
         exception.getErrorMessage() == TOURNAMENT_WITH_DATA_NO_VALID
+        tournamentRepository.count() == 0L
     }
 
     def "create a tournament with start date before current date"(){
@@ -169,6 +172,7 @@ class CreateTournament extends Specification{
         then: "Tournament is not consistent because start date is before current date"
         def exception = thrown(TutorException)
         exception.getErrorMessage() == TOURNAMENT_WITH_DATA_NO_VALID
+        tournamentRepository.count() == 0L
     }
 
     def "create a tournament with no topics"(){
@@ -184,6 +188,7 @@ class CreateTournament extends Specification{
         then: "Tournament is not consistent because doesn't have topics to be created"
         def exception = thrown(TutorException)
         exception.getErrorMessage() == TOURNAMENT_NO_TOPICS
+        tournamentRepository.count() == 0L
     }
 
     def "create a tournament with no number of questions"() {
@@ -199,6 +204,7 @@ class CreateTournament extends Specification{
         then: "Tournament is not consistent because but doesnt have number of questions to be created"
         def exception = thrown(TutorException)
         exception.getErrorMessage() == TOURNAMENT_NO_NUMBER_OF_QUESTIONS
+        tournamentRepository.count() == 0L
     }
 
 /*
