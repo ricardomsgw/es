@@ -36,6 +36,12 @@ class CreateExternalCourseExecutionServiceSpockTest extends Specification {
     @Autowired
     CourseExecutionRepository courseExecutionRepository
 
+    def adminService
+    
+    def setup (){
+        adminService = new AdministrationService()
+    }
+
     def "the tecnico course exists and create execution course"() {
         given: "a course"
         def course = new Course(COURSE_ONE, Course.Type.TECNICO)

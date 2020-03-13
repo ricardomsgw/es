@@ -8,6 +8,7 @@ import pt.ulisboa.tecnico.socialsoftware.tutor.course.CourseExecution;
 import pt.ulisboa.tecnico.socialsoftware.tutor.impexp.Importable;
 import pt.ulisboa.tecnico.socialsoftware.tutor.question.domain.Question;
 import pt.ulisboa.tecnico.socialsoftware.tutor.quiz.domain.Quiz;
+import pt.ulisboa.tecnico.socialsoftware.tutor.tournament.Tournament;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -17,6 +18,10 @@ import java.util.stream.Collectors;
 @Entity
 @Table(name = "users")
 public class User implements UserDetails, Importable {
+
+
+
+
     public enum Role {STUDENT, TEACHER, ADMIN}
 
     @Id
@@ -38,12 +43,14 @@ public class User implements UserDetails, Importable {
     private Integer numberOfTeacherQuizzes;
     private Integer numberOfStudentQuizzes;
     private Integer numberOfInClassQuizzes;
+    private Integer numberOfTournaments;
     private Integer numberOfTeacherAnswers;
     private Integer numberOfInClassAnswers;
     private Integer numberOfStudentAnswers;
     private Integer numberOfCorrectTeacherAnswers;
     private Integer numberOfCorrectInClassAnswers;
     private Integer numberOfCorrectStudentAnswers;
+
 
     @Column(name = "creation_date")
     private LocalDateTime creationDate;
@@ -56,6 +63,9 @@ public class User implements UserDetails, Importable {
 
     @ManyToMany
     private Set<CourseExecution> courseExecutions = new HashSet<>();
+
+    @ManyToMany(cascade = CascadeType.ALL, fetch=FetchType.LAZY)
+    private Set <Tournament> tournaments = new HashSet<>();
 
     public User() {
     }
@@ -150,8 +160,22 @@ public class User implements UserDetails, Importable {
         return courseExecutions;
     }
 
+
     public void setCourseExecutions(Set<CourseExecution> courseExecutions) {
         this.courseExecutions = courseExecutions;
+    }
+
+    public void addCourseExecutions(CourseExecution courseExecution){
+        this.courseExecutions.add(courseExecution);
+    }
+
+
+    public Set<Tournament> getTournaments() {
+        return tournaments;
+    }
+
+    public void addTournaments(Tournament tournament) {
+        this.tournaments.add(tournament);
     }
 
     public Integer getNumberOfTeacherQuizzes() {
