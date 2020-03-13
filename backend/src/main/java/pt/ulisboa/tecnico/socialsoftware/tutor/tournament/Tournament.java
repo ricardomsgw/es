@@ -13,7 +13,10 @@ import java.util.Set;
 import static pt.ulisboa.tecnico.socialsoftware.tutor.exceptions.ErrorMessage.COURSE_EXECUTION_ACRONYM_IS_EMPTY;
 
 @Entity
-@Table(name = "tournaments")
+@Table( name = "tournaments",
+        indexes = {
+                @Index(name = "tournament_indx_0", columnList = "id")
+        })
 public class Tournament {
 
     public enum Status {CREATED, OPENED, CLOSED, CANCELED}
@@ -51,7 +54,9 @@ public class Tournament {
 
     public Tournament(Integer numberOfQuestions, LocalDateTime startDate, LocalDateTime conclusionDate, Set<Topic> topics) {
 
-        if (numberOfQuestions == 0) {
+        this.currentDate = LocalDateTime.now();
+
+        if (numberOfQuestions <= 0) {
             throw new TutorException(TOURNAMENT_NO_NUMBER_OF_QUESTIONS);
         }
 
@@ -59,11 +64,15 @@ public class Tournament {
             throw new TutorException(TOURNAMENT_WITH_DATA_NO_VALID);
         }
 
+        if (startDate.isAfter(conclusionDate)){
+            throw new TutorException(TOURNAMENT_WITH_DATA_NO_VALID);
+        }
+
         if (!checkConclusionDate(conclusionDate)) {
             throw new TutorException(TOURNAMENT_WITH_DATA_NO_VALID);
         }
 
-        if (topics == null) {
+        if (topics.size() == 0) {
             throw new TutorException(TOURNAMENT_NO_TOPICS);
         }
         this.numberOfQuestions = numberOfQuestions;
@@ -75,14 +84,22 @@ public class Tournament {
     }
 
     public boolean checkStartDate (LocalDateTime startDate) {
-        if (currentDate != null && startDate!= null && startDate.isBefore(currentDate)){
+        if (startDate == null) {
             return false;
         }
+        else if (currentDate != null && startDate.isBefore(currentDate)){
+            return false;
+        }
+
         return true;
     }
 
     public boolean checkConclusionDate (LocalDateTime conclusionDate) {
-        if (startDate != null && conclusionDate!= null && conclusionDate.isBefore(startDate)){
+        if (conclusionDate == null) {
+            return false;
+        }
+
+        if (startDate != null && conclusionDate.isBefore(startDate)){
             return false;
         }
         return true;

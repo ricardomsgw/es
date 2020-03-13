@@ -5,6 +5,7 @@ import pt.ulisboa.tecnico.socialsoftware.tutor.question.dto.TopicDto;
 import pt.ulisboa.tecnico.socialsoftware.tutor.quiz.domain.Quiz;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
@@ -29,6 +30,8 @@ public class TournamentDto implements Serializable {
     public TournamentDto(Tournament tournament){
 
         this.tournamentId = tournament.getId();
+        this.status = tournament.getStatus();
+        this.courseExecutionId = tournament.getCourseExecution().getId();
         this.numberOfQuestions = tournament.getNumberOfQuestions();
         this.topics = tournament.getTopics().stream().map(topic -> { TopicDto topicDto = new TopicDto(topic); return topicDto; }).collect(Collectors.toList());
         if (tournament.getStartDate() != null)
@@ -37,6 +40,7 @@ public class TournamentDto implements Serializable {
             this.currentDate = tournament.getCurrentDate().format(formatter);
         if (tournament.getConclusionDate() != null)
             this.conclusionDate = tournament.getConclusionDate().format(formatter);
+
     }
 
     public Integer getId() {
@@ -93,5 +97,26 @@ public class TournamentDto implements Serializable {
 
     public void setCourseExecutionId(int courseExecutionId) {
         this.courseExecutionId = courseExecutionId;
+    }
+
+    public LocalDateTime getStartDateDate() {
+        if (getStartDate() == null || getStartDate().isEmpty()) {
+            return null;
+        }
+        return LocalDateTime.parse(getStartDate(), formatter);
+    }
+
+    public LocalDateTime getCurrentDateDate() {
+        if (getCurrentDate() == null || getCurrentDate().isEmpty()) {
+            return null;
+        }
+        return LocalDateTime.parse(getCurrentDate(), formatter);
+    }
+
+    public LocalDateTime getConclusionDateDate() {
+        if (getConclusionDate() == null || getConclusionDate().isEmpty()) {
+            return null;
+        }
+        return LocalDateTime.parse(getConclusionDate(), formatter);
     }
 }
