@@ -10,14 +10,12 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
+import java.sql.Date;
 
 import static pt.ulisboa.tecnico.socialsoftware.tutor.exceptions.ErrorMessage.COURSE_EXECUTION_ACRONYM_IS_EMPTY;
 
 @Entity
-@Table( name = "tournaments",
-        indexes = {
-                @Index(name = "tournament_indx_0", columnList = "id")
-        })
+@Table(name = "tournaments")
 public class Tournament {
 
     public enum Status {CREATED, OPENED, CLOSED, CANCELED}
@@ -41,13 +39,11 @@ public class Tournament {
     @Column(name = "conclusion_date")
     private LocalDateTime conclusionDate;
 
-    /*@OneToMany(cascade = CascadeType.ALL, mappedBy = "course", fetch=FetchType.LAZY, orphanRemoval=true)
-    private Set<Topic> topics = new HashSet<>();*/
 
-    @ManyToMany(mappedBy= "tournaments")
+    @ManyToMany(cascade = CascadeType.ALL, fetch=FetchType.EAGER, mappedBy = "tournaments")
     private Set<Topic> topics = new HashSet<>();
 
-    @ManyToMany(mappedBy= "tournaments")
+    @ManyToMany(cascade = CascadeType.ALL, fetch=FetchType.EAGER)
     private Set<User> users = new HashSet<>();
 
 

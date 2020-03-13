@@ -36,7 +36,7 @@ public class Topic {
     @ManyToMany(cascade = CascadeType.ALL, fetch=FetchType.EAGER)
     private List<TopicConjunction> topicConjunctions = new ArrayList<>();
 
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.ALL, fetch=FetchType.LAZY)
     private Set<Tournament> tournaments = new HashSet<>();
 
     @ManyToOne

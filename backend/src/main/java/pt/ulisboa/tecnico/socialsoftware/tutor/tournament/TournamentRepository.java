@@ -15,6 +15,4 @@ import java.util.Optional;
 @Repository
 @Transactional
 public interface TournamentRepository extends JpaRepository<Tournament, Integer>{
-    /*@Query(value = "select * from tournaments t where t.start_date = :startDate", nativeQuery = true)
-    Optional<Tournament> findByStartDate(LocalDateTime startDate);*/
 }

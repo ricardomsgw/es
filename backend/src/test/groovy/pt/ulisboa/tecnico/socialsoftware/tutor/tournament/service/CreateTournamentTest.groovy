@@ -73,7 +73,7 @@ class CreateTournament extends Specification{
     def setup() {
         formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")
         tournament = new TournamentDto()
-        tournament.setId(TOURNAMENT_ID)
+        //tournament.setId(TOURNAMENT_ID)
         user = new User()
         topic = new TopicDto()
 
