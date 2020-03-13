@@ -57,7 +57,16 @@ public class Tournament {
     public Tournament(Integer numberOfQuestions, LocalDateTime startDate, LocalDateTime conclusionDate, Set<Topic> topics) {
 
         this.currentDate = LocalDateTime.now();
+        checkInputs(numberOfQuestions, startDate, conclusionDate, topics);
+        this.numberOfQuestions = numberOfQuestions;
+        this.startDate = startDate;
+        this.conclusionDate = conclusionDate;
+        this.status = Status.CREATED;
+        this.topics = topics;
 
+    }
+
+    private void checkInputs(Integer numberOfQuestions, LocalDateTime startDate, LocalDateTime conclusionDate, Set<Topic> topics) {
         if (numberOfQuestions <= 0) {
             throw new TutorException(TOURNAMENT_NO_NUMBER_OF_QUESTIONS);
         }
@@ -77,12 +86,6 @@ public class Tournament {
         if (topics.size() == 0) {
             throw new TutorException(TOURNAMENT_NO_TOPICS);
         }
-        this.numberOfQuestions = numberOfQuestions;
-        this.startDate = startDate;
-        this.conclusionDate = conclusionDate;
-        this.status = Status.CREATED;
-        this.topics = topics;
-
     }
 
     public boolean checkStartDate (LocalDateTime startDate) {
@@ -163,10 +166,14 @@ public class Tournament {
     }
 
     public void openTournament(){
+        setStatusToOpened();
+    }
+
+    private void setStatusToOpened() {
         if (this.status != Status.CREATED) {
             throw new TutorException(TOURNAMENT_IS_NOT_CREATED);
         }
-        Tournament.Status status = Status.OPENED;
+        Status status = Status.OPENED;
         setStatus(status);
     }
 
@@ -188,6 +195,12 @@ public class Tournament {
     public Set<User> getUsers(){ return users;}
 
     public void addUser(User user) {
+        checkToAddUser(user);
+        users.add(user);
+        user.addTournaments(this);
+    }
+
+    private void checkToAddUser(User user) {
         if (status != Status.OPENED)
             throw new TutorException(TOURNAMENT_NOT_OPEN);
         if (user.getRole() != User.Role.STUDENT)
@@ -198,7 +211,5 @@ public class Tournament {
             throw new TutorException(TOURNAMENT_NOT_ELEGIBLE);
         if (this.getUsers().contains(user))
             throw new TutorException(TOURNAMENT_ALREADY_JOINED);
-        users.add(user);
-        user.addTournaments(this);
     }
 }

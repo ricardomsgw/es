@@ -5,12 +5,9 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
 import org.springframework.boot.test.context.TestConfiguration
 import org.springframework.context.annotation.Bean
 import pt.ulisboa.tecnico.socialsoftware.tutor.course.Course
-import pt.ulisboa.tecnico.socialsoftware.tutor.course.CourseDto
 import pt.ulisboa.tecnico.socialsoftware.tutor.course.CourseExecution
 import pt.ulisboa.tecnico.socialsoftware.tutor.course.CourseExecutionRepository
 import pt.ulisboa.tecnico.socialsoftware.tutor.course.CourseRepository
-import pt.ulisboa.tecnico.socialsoftware.tutor.course.CourseService
-import pt.ulisboa.tecnico.socialsoftware.tutor.exceptions.ErrorMessage
 import pt.ulisboa.tecnico.socialsoftware.tutor.exceptions.TutorException
 import pt.ulisboa.tecnico.socialsoftware.tutor.question.dto.TopicDto
 import pt.ulisboa.tecnico.socialsoftware.tutor.user.User
@@ -18,14 +15,6 @@ import pt.ulisboa.tecnico.socialsoftware.tutor.user.UserRepository
 import spock.lang.Specification
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter
-
-import static pt.ulisboa.tecnico.socialsoftware.tutor.exceptions.ErrorMessage.COURSE_EXECUTION_ACADEMIC_TERM_IS_EMPTY
-import static pt.ulisboa.tecnico.socialsoftware.tutor.exceptions.ErrorMessage.COURSE_EXECUTION_ACADEMIC_TERM_IS_EMPTY
-import static pt.ulisboa.tecnico.socialsoftware.tutor.exceptions.ErrorMessage.COURSE_EXECUTION_ACRONYM_IS_EMPTY
-import static pt.ulisboa.tecnico.socialsoftware.tutor.exceptions.ErrorMessage.COURSE_EXECUTION_ACRONYM_IS_EMPTY
-import static pt.ulisboa.tecnico.socialsoftware.tutor.exceptions.ErrorMessage.COURSE_NAME_IS_EMPTY
-import static pt.ulisboa.tecnico.socialsoftware.tutor.exceptions.ErrorMessage.COURSE_NAME_IS_EMPTY
-import static pt.ulisboa.tecnico.socialsoftware.tutor.exceptions.ErrorMessage.COURSE_TYPE_NOT_DEFINED
 import static pt.ulisboa.tecnico.socialsoftware.tutor.exceptions.ErrorMessage.TOURNAMENT_NO_NUMBER_OF_QUESTIONS
 import static pt.ulisboa.tecnico.socialsoftware.tutor.exceptions.ErrorMessage.TOURNAMENT_WITH_DATA_NO_VALID
 import static pt.ulisboa.tecnico.socialsoftware.tutor.exceptions.ErrorMessage.TOURNAMENT_NO_TOPICS
@@ -73,7 +62,6 @@ class CreateTournament extends Specification{
     def setup() {
         formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")
         tournament = new TournamentDto()
-        //tournament.setId(TOURNAMENT_ID)
         user = new User()
         topic = new TopicDto()
 
@@ -85,9 +73,6 @@ class CreateTournament extends Specification{
 
         tournament.setCourseExecutionId(courseExecution.getId())
         courseExecutionId = courseExecution.getId()
-        //course.setId(COURSE_EXECUTION_ID);
-        Integer ce = courseExecution.getId()
-        //tournament.setCourseExecutionId(ce)
         courseExecutionRepository.save(courseExecution)
 
         User.Role role = User.Role.STUDENT
@@ -108,7 +93,6 @@ class CreateTournament extends Specification{
         tournament.setCurrentDate(currentDate.format(formatter))
         tournament.setConclusionDate(conclusionDate.format(formatter))
 
-
         when:
         def result = tournamentService.createTournament((TournamentDto) tournament)
 
@@ -126,7 +110,6 @@ class CreateTournament extends Specification{
 
     def "create a tournament no start date"(){
         given: 'a tournament with number of questions, topics but no start date'
-
         tournament.setNumberOfQuestions(TOURNAMENT_NUMBER_OF_QUESTIONS)
         tournament.getTopics().add(topic)
         tournament.setCurrentDate(currentDate.format(formatter))
@@ -143,7 +126,6 @@ class CreateTournament extends Specification{
 
     def "create a tournament with conclusion date before start date"(){
         given: 'a tournament with number of questions, topics, but conclusion date is before date'
-
         tournament.setNumberOfQuestions(TOURNAMENT_NUMBER_OF_QUESTIONS)
         tournament.getTopics().add(topic)
         tournament.setStartDate(startDate.plusDays(2).format(formatter))
@@ -208,27 +190,9 @@ class CreateTournament extends Specification{
         tournamentRepository.count() == 0L
     }
 
-/*
-    def "create a tournament by user no student"(){
-        given: 'a tournament created by a no student'
-        tournament.setNumberOfQuestions(0)
-        tournament.getTopics().add(topic)
-        tournament.setStartDate(startDate.format(formatter))
-        tournament.setCurrentDate(currentDate.format(formatter))
-        tournament.setConclusionDate(conclusionDate.format(formatter))
-        user.setRole(user.Role.TEACHER)
-
-        when:
-        tournamentService.createTournament((TournamentDto) tournament)
-
-        then: "Tournament can't be created by a no student"
-        def exception = thrown(TutorException)
-        exception.getErrorMessage() == ErrorMessage.TOURNAMENT_BY_NO_STUDENT
-    }*/
 
     def "invalid arguments: numberOfQuestions=#TOURNAMENT_NUMBER_OF_QUESTIONS || errorMessage=#errorMessage "() {
         given: "a tournamentDto"
-
         tournament.setNumberOfQuestions(numberOfQuestionsQuestions)
         tournament.getTopics().add(topic)
         tournament.setStartDate(startDate.format(formatter))

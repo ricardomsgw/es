@@ -57,31 +57,39 @@ public class TournamentService {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
         Tournament tournament = null;
         List<TopicDto> topicsDto = tournamentDto.getTopics();
+
         int courseExecutionId = tournamentDto.getCourseExecutionId();
         CourseExecution courseExecution = courseExecutionRepository.findById(courseExecutionId).orElseThrow(() -> new TutorException(COURSE_EXECUTION_NOT_FOUND, courseExecutionId));
         Course courseAux = courseExecution.getCourse();
+
         Set<Topic> topics = new HashSet<>();
-        Iterator <TopicDto>  iterator = topicsDto.iterator();
-        Topic topicAux;
-        while(iterator.hasNext()){
-            TopicDto topicDtoAux = iterator.next();
-            topicAux = new Topic(courseAux, topicDtoAux);
-            topics.add(topicAux);
-        }
+        getTournamentTopics(topicsDto, courseAux, topics);
+
         LocalDateTime startDate = tournamentDto.getStartDateDate();
         LocalDateTime conclusionDate = tournamentDto.getConclusionDateDate();
         LocalDateTime currentDate = tournamentDto.getCurrentDateDate();
         Integer numberOfQuestions = tournamentDto.getNumberOfQuestions();
         Integer id = tournamentDto.getId();
-
         tournament = new Tournament(numberOfQuestions, startDate, conclusionDate, topics);
         tournament.setId(id);
         tournament.setStatus(Tournament.Status.CREATED);
         tournament.setCourseExecution(courseExecution);
         tournament.setCurrentDate(currentDate);
         tournamentRepository.save(tournament);
+
         return new TournamentDto(tournament);
     }
+
+    private void getTournamentTopics(List<TopicDto> topicsDto, Course courseAux, Set<Topic> topics) {
+        Iterator<TopicDto> iterator = topicsDto.iterator();
+        Topic topicAux;
+        while(iterator.hasNext()){
+            TopicDto topicDtoAux = iterator.next();
+            topicAux = new Topic(courseAux, topicDtoAux);
+            topics.add(topicAux);
+        }
+    }
+
     @Transactional(isolation = Isolation.REPEATABLE_READ)
     public TournamentDto addUser(int userId, int tournamentId){
         Tournament tournament = tournamentRepository.findById(tournamentId).orElseThrow(() ->new TutorException(TOURNAMENT_NOT_FOUND, tournamentId));

@@ -5,18 +5,14 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
 import org.springframework.boot.test.context.TestConfiguration
 import org.springframework.context.annotation.Bean
 import pt.ulisboa.tecnico.socialsoftware.tutor.course.Course
-import pt.ulisboa.tecnico.socialsoftware.tutor.course.CourseDto
 import pt.ulisboa.tecnico.socialsoftware.tutor.course.CourseExecution
 import pt.ulisboa.tecnico.socialsoftware.tutor.course.CourseExecutionRepository
 import pt.ulisboa.tecnico.socialsoftware.tutor.course.CourseRepository
-import pt.ulisboa.tecnico.socialsoftware.tutor.course.CourseService
 import pt.ulisboa.tecnico.socialsoftware.tutor.exceptions.ErrorMessage
 import pt.ulisboa.tecnico.socialsoftware.tutor.exceptions.TutorException
 import pt.ulisboa.tecnico.socialsoftware.tutor.question.domain.Topic
-import pt.ulisboa.tecnico.socialsoftware.tutor.question.dto.TopicDto
 import pt.ulisboa.tecnico.socialsoftware.tutor.user.User
 import pt.ulisboa.tecnico.socialsoftware.tutor.user.UserRepository
-import pt.ulisboa.tecnico.socialsoftware.tutor.user.dto.UserDto
 import spock.lang.Specification
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter
@@ -159,7 +155,6 @@ class JoinTournament extends Specification {
     def "student tries to join a tournament belonging to a course he's not enrolled in"(){
         given:
         user.setRole(User.Role.STUDENT)
-
         def tournamentId = tournamentRepository.findAll().get(0).getId()
         def userId = userRepository.findAll().get(0).getId()
         when:

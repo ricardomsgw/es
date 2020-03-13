@@ -37,13 +37,17 @@ public class TournamentDto implements Serializable {
         this.numberOfQuestions = tournament.getNumberOfQuestions();
         this.users = tournament.getUsers().stream().map(user -> { UserDto userDto = new UserDto(user); return userDto; }).collect(Collectors.toList());
         this.topics = tournament.getTopics().stream().map(topic -> { TopicDto topicDto = new TopicDto(topic); return topicDto; }).collect(Collectors.toList());
+        checkDates(tournament);
+
+    }
+
+    private void checkDates(Tournament tournament) {
         if (tournament.getStartDate() != null)
             this.startDate = tournament.getStartDate().format(formatter);
         if (tournament.getCurrentDate() != null)
             this.currentDate = tournament.getCurrentDate().format(formatter);
         if (tournament.getConclusionDate() != null)
             this.conclusionDate = tournament.getConclusionDate().format(formatter);
-
     }
 
     public Integer getId() {
