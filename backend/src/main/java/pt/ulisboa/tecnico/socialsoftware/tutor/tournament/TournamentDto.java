@@ -51,6 +51,14 @@ public class TournamentDto implements Serializable {
         this.tournamentId = tournamentId;
     }
 
+    public int getCourseId() {
+        return tournamentId;
+    }
+
+    public void setCourseId(int tournamentId) {
+        this.tournamentId = tournamentId;
+    }
+
     public String getStartDate() {
         return startDate;
     }
@@ -81,7 +89,7 @@ public class TournamentDto implements Serializable {
 
     public List<TopicDto> getTopics() { return topics; }
 
-    public void setTopics(List<TopicDto> topics) { this.topics = topics; }
+    public void setTopics(TopicDto topic) { this.topics.add(topic); }
 
     public Tournament.Status getStatus() {
         return status;

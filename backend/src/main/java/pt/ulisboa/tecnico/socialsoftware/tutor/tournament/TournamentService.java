@@ -70,7 +70,7 @@ public class TournamentService {
         tournament.setStatus(Tournament.Status.CREATED);
         tournament.setCourseExecution(courseExecution);
         tournament.setCurrentDate(currentDate);
-        entityManager.persist(tournament);
+        tournamentRepository.save(tournament);
         return new TournamentDto(tournament);
     }
 }
