@@ -1,6 +1,5 @@
 package pt.ulisboa.tecnico.socialsoftware.tutor.answer.domain;
 
-import pt.ulisboa.tecnico.socialsoftware.tutor.impexp.Importable;
 import pt.ulisboa.tecnico.socialsoftware.tutor.question.domain.Option;
 import pt.ulisboa.tecnico.socialsoftware.tutor.quiz.domain.QuizQuestion;
 
@@ -23,6 +22,7 @@ public class QuestionAnswer {
     @ManyToOne
     @JoinColumn(name = "quiz_answer_id")
     private QuizAnswer quizAnswer;
+
 
     @ManyToOne
     @JoinColumn(name = "option_id")
@@ -53,6 +53,7 @@ public class QuestionAnswer {
         quizQuestion.addQuestionAnswer(this);
         this.sequence = sequence;
     }
+
 
     public void remove() {
         quizAnswer.getQuestionAnswers().remove(this);

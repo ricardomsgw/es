@@ -2,6 +2,7 @@ package pt.ulisboa.tecnico.socialsoftware.tutor.question.domain;
 
 import pt.ulisboa.tecnico.socialsoftware.tutor.course.Course;
 import pt.ulisboa.tecnico.socialsoftware.tutor.question.dto.TopicDto;
+import pt.ulisboa.tecnico.socialsoftware.tutor.tournament.Tournament;
 
 import javax.persistence.*;
 import java.util.*;
@@ -26,11 +27,15 @@ public class Topic {
     @ManyToOne
     private Topic parentTopic;
 
+
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "parentTopic", fetch=FetchType.EAGER)
     private Set<Topic> childrenTopics = new HashSet<>();
 
     @ManyToMany(cascade = CascadeType.ALL, fetch=FetchType.EAGER)
     private List<TopicConjunction> topicConjunctions = new ArrayList<>();
+
+    @ManyToMany(cascade = CascadeType.ALL, fetch=FetchType.LAZY)
+    private Set<Tournament> tournaments = new HashSet<>();
 
     @ManyToOne
     @JoinColumn(name = "course_id")
