@@ -33,17 +33,17 @@ public class Tournament {
     @Column(name = "start_date")
     private LocalDateTime startDate;
 
-    @Column(name = "current_date")
+    @Column(name = "today_date")
     private LocalDateTime currentDate;
 
     @Column(name = "conclusion_date")
     private LocalDateTime conclusionDate;
 
 
-    @ManyToMany(cascade = CascadeType.ALL, fetch=FetchType.EAGER, mappedBy = "tournaments")
+    @ManyToMany(cascade = CascadeType.ALL, fetch=FetchType.LAZY, mappedBy = "tournaments")
     private Set<Topic> topics = new HashSet<>();
 
-    @ManyToMany(cascade = CascadeType.ALL, fetch=FetchType.EAGER)
+    @ManyToMany(cascade = CascadeType.ALL, fetch=FetchType.LAZY)
     private Set<User> users = new HashSet<>();
 
 

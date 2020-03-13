@@ -27,8 +27,6 @@ public class Topic {
     @ManyToOne
     private Topic parentTopic;
 
-    //@ManyToOne
-    //private Tournament tournament;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "parentTopic", fetch=FetchType.EAGER)
     private Set<Topic> childrenTopics = new HashSet<>();
