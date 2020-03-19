@@ -8,6 +8,7 @@ import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
+import pt.ulisboa.tecnico.socialsoftware.tutor.course.CourseDto;
 import pt.ulisboa.tecnico.socialsoftware.tutor.course.CourseExecution;
 import pt.ulisboa.tecnico.socialsoftware.tutor.course.CourseExecutionRepository;
 import pt.ulisboa.tecnico.socialsoftware.tutor.exceptions.TutorException;
@@ -19,13 +20,9 @@ import pt.ulisboa.tecnico.socialsoftware.tutor.question.dto.TopicConjunctionDto;
 import pt.ulisboa.tecnico.socialsoftware.tutor.question.repository.AssessmentRepository;
 import pt.ulisboa.tecnico.socialsoftware.tutor.question.repository.TopicConjunctionRepository;
 import pt.ulisboa.tecnico.socialsoftware.tutor.question.repository.TopicRepository;
-
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import java.sql.SQLException;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -48,8 +45,13 @@ public class AssessmentService {
     @Autowired
     private CourseExecutionRepository courseExecutionRepository;
 
-    @PersistenceContext
-    EntityManager entityManager;
+    @Transactional(isolation = Isolation.REPEATABLE_READ)
+    public CourseDto findAssessmentCourseExecution(int assessmentId) {
+        return assessmentRepository.findById(assessmentId)
+                .map(Assessment::getCourseExecution)
+                .map(CourseDto::new)
+                .orElseThrow(() -> new TutorException(ASSESSMENT_NOT_FOUND, assessmentId));
+    }
 
     @Retryable(
       value = { SQLException.class },
@@ -90,8 +92,8 @@ public class AssessmentService {
                 }).collect(Collectors.toList());
 
         Assessment assessment = new Assessment(courseExecution, topicConjunctions, assessmentDto);
+        assessmentRepository.save(assessment);
 
-        this.entityManager.persist(assessment);
         return new AssessmentDto(assessment);
     }
 
@@ -143,7 +145,7 @@ public class AssessmentService {
     public void removeAssessment(Integer assessmentId) {
         Assessment assessment = assessmentRepository.findById(assessmentId).orElseThrow(() -> new TutorException(ASSESSMENT_NOT_FOUND, assessmentId));
         assessment.remove();
-        entityManager.remove(assessment);
+        assessmentRepository.delete(assessment);
     }
 
     @Retryable(
