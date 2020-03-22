@@ -21,7 +21,8 @@ import static pt.ulisboa.tecnico.socialsoftware.tutor.exceptions.ErrorMessage.TO
 
 
 @DataJpaTest
-class CreateTournament extends Specification{
+// classes should have the same name as the file
+class CreateTournamentTest extends Specification{
 
     static final Integer TOURNAMENT_NUMBER_OF_QUESTIONS = 3;
     static final Integer COURSE_EXECUTION_ID = 10;

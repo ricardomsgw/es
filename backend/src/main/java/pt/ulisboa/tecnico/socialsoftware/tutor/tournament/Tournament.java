@@ -47,6 +47,8 @@ public class Tournament {
     @ManyToMany(cascade = CascadeType.ALL, fetch=FetchType.LAZY)
     private Set<User> users = new HashSet<>();
 
+    // missing creator column
+
 
     @ManyToOne
     @JoinColumn(name = "course_execution_id")
@@ -54,6 +56,7 @@ public class Tournament {
 
     public Tournament() {}
 
+    // should have a constructor that receives a tournamentDto, check the other modules
     public Tournament(Integer numberOfQuestions, LocalDateTime startDate, LocalDateTime conclusionDate, Set<Topic> topics) {
 
         this.currentDate = LocalDateTime.now();

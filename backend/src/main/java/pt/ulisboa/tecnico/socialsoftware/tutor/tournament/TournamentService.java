@@ -54,6 +54,8 @@ public class TournamentService {
             backoff = @Backoff(delay = 5000))
     @Transactional(isolation = Isolation.REPEATABLE_READ)
     public TournamentDto createTournament(TournamentDto tournamentDto){
+        // who create the tournament? should be a user and from the same courseExec
+        // in the future only that student will be able to cancel the tournament
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
         Tournament tournament = null;
         List<TopicDto> topicsDto = tournamentDto.getTopics();
@@ -70,6 +72,7 @@ public class TournamentService {
         LocalDateTime currentDate = tournamentDto.getCurrentDateDate();
         Integer numberOfQuestions = tournamentDto.getNumberOfQuestions();
         Integer id = tournamentDto.getId();
+        // here you should call the constructor with the dto
         tournament = new Tournament(numberOfQuestions, startDate, conclusionDate, topics);
         tournament.setId(id);
         tournament.setStatus(Tournament.Status.CREATED);

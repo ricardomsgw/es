@@ -18,7 +18,8 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter
 
 @DataJpaTest
-class JoinTournament extends Specification {
+// classes should have the same name as the file
+class JoinTournamentTest extends Specification {
     public static final String COURSE_NAME = "Software Architecture"
     public static final String ACRONYM = "AS1"
     public static final String ACADEMIC_TERM = "1 SEM"
