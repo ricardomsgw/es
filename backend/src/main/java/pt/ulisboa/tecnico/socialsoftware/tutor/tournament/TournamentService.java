@@ -23,10 +23,7 @@ import javax.persistence.PersistenceContext;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static pt.ulisboa.tecnico.socialsoftware.tutor.exceptions.ErrorMessage.*;
@@ -35,10 +32,14 @@ import static pt.ulisboa.tecnico.socialsoftware.tutor.exceptions.ErrorMessage.*;
 public class TournamentService {
 
     @Autowired
-    private TournamentRepository tournamentRepository;
+    private CourseRepository courseRepository;
 
     @Autowired
     private CourseExecutionRepository courseExecutionRepository;
+
+    @Autowired
+    private TournamentRepository tournamentRepository;
+
 
     @Autowired
     private TopicRepository topicRepository;
@@ -99,5 +100,17 @@ public class TournamentService {
 
         entityManager.persist(tournament);
         return new TournamentDto(tournament);
+    }
+
+    @Retryable(
+            value = { SQLException.class },
+            backoff = @Backoff(delay = 5000))
+    @Transactional(isolation = Isolation.REPEATABLE_READ)
+    public List<TournamentDto> getTournaments(int courseExecutionId) {
+        CourseExecution courseExecution= courseExecutionRepository.findById(courseExecutionId).orElseThrow(() -> new TutorException(COURSE_NOT_FOUND, courseExecutionId));
+
+        return courseExecution.getOpenedTournaments().stream()
+                .map(TournamentDto::new)
+                .collect(Collectors.toList());
     }
 }
