@@ -107,7 +107,7 @@
           </HTTPSamplerProxy>
           <hashTree>
             <JSONPathAssertion guiclass="JSONPathAssertionGui" testclass="JSONPathAssertion" testname="Assert getvtournaments" enabled="true">
-              <stringProp name="JSON_PATH">$.tournaments[0]</stringProp>
+              <stringProp name="JSON_PATH">$.tournaments</stringProp>
               <stringProp name="EXPECTED_VALUE">[&quot;&quot;]</stringProp>
               <boolProp name="JSONVALIDATION">true</boolProp>
               <boolProp name="EXPECT_NULL">false</boolProp>

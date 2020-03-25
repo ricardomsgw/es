@@ -56,7 +56,7 @@ public class TournamentController {
     }*/
 
     @PostMapping("/tournaments")
-    //@PreAuthorize("hasRole('ROLE_STUDENT')")
+    @PreAuthorize("hasRole('ROLE_STUDENT')")
     public TournamentDto createTournament(@Valid @RequestBody TournamentDto tournamentDto) {
         System.out.println("PRINT");
         return tournamentService.createTournament(tournamentDto);
