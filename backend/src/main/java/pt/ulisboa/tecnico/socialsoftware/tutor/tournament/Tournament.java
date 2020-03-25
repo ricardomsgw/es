@@ -123,7 +123,7 @@ public class Tournament {
     public void setNumberOfQuestions(Integer numberOfQuestions) { this.numberOfQuestions = numberOfQuestions; }
 
 
-    public void setTopics(Set<Topic> topics) {
+    public void addTopics(Set<Topic> topics) {
         this.topics = topics;
     }
 

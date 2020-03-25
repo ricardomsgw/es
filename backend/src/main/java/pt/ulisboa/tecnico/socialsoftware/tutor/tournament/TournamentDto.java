@@ -1,6 +1,7 @@
 package pt.ulisboa.tecnico.socialsoftware.tutor.tournament;
 
 import org.springframework.data.annotation.Transient;
+import pt.ulisboa.tecnico.socialsoftware.tutor.question.domain.Topic;
 import pt.ulisboa.tecnico.socialsoftware.tutor.question.dto.TopicDto;
 import pt.ulisboa.tecnico.socialsoftware.tutor.quiz.domain.Quiz;
 import pt.ulisboa.tecnico.socialsoftware.tutor.user.dto.UserDto;
@@ -9,6 +10,7 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -16,8 +18,8 @@ public class TournamentDto implements Serializable {
 
     private Integer tournamentId;
     private int numberOfQuestions;
-    private List<TopicDto> topics = new ArrayList<>();
-    private List<UserDto> users = new ArrayList<>();
+    private List<Integer> topics = new ArrayList<>();
+    //private List<UserDto> users = new ArrayList<>();
     private String startDate = null;
     private String currentDate = null;
     private String conclusionDate = null;
@@ -31,14 +33,26 @@ public class TournamentDto implements Serializable {
 
     public TournamentDto(Tournament tournament){
 
+        this.currentDate = LocalDateTime.now().format(formatter);
         this.tournamentId = tournament.getId();
         this.status = tournament.getStatus();
         this.courseExecutionId = tournament.getCourseExecution().getId();
         this.numberOfQuestions = tournament.getNumberOfQuestions();
-        this.users = tournament.getUsers().stream().map(user -> { UserDto userDto = new UserDto(user); return userDto; }).collect(Collectors.toList());
-        this.topics = tournament.getTopics().stream().map(topic -> { TopicDto topicDto = new TopicDto(topic); return topicDto; }).collect(Collectors.toList());
+        //this.users = tournament.getUsers().stream().map(user -> { UserDto userDto = new UserDto(user); return userDto; }).collect(Collectors.toList());
+        this.topics = defTopics(tournament);
         checkDates(tournament);
 
+    }
+
+    private List<Integer> defTopics(Tournament tournament) {
+        List<Integer> listAux = new ArrayList<>();
+        Iterator iterator = tournament.getTopics().iterator();
+        while(iterator.hasNext()){
+            Topic topicAux = (Topic) iterator.next();
+            Integer idTopicAux = topicAux.getId();
+            listAux.add(idTopicAux);
+        }
+        return listAux;
     }
 
     private void checkDates(Tournament tournament) {
@@ -94,15 +108,15 @@ public class TournamentDto implements Serializable {
 
     public void setNumberOfQuestions(int numberOfQuestions) { this.numberOfQuestions = numberOfQuestions; }
 
-    public List<UserDto> getUsers() { return users;    }
+    /*public List<UserDto> getUsers() { return users;    }
 
     public void setUsers(List<UserDto> users) { this.users = users;  }
 
-    public void addUser(UserDto user){ this.users.add(user);}
+    public void addUser(UserDto user){ this.users.add(user);}*/
 
-    public List<TopicDto> getTopics() { return topics; }
+    public List<Integer> getTopics() { return topics; }
 
-    public void setTopics(TopicDto topic) { this.topics.add(topic); }
+    public void addTopics(Integer topicId) { this.topics.add(topicId); }
 
     public Tournament.Status getStatus() {
         return status;

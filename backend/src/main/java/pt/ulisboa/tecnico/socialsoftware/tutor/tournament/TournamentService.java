@@ -57,14 +57,14 @@ public class TournamentService {
     public TournamentDto createTournament(TournamentDto tournamentDto){
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
         Tournament tournament = null;
-        List<TopicDto> topicsDto = tournamentDto.getTopics();
+        List<Integer> topicsDto = tournamentDto.getTopics();
 
         int courseExecutionId = tournamentDto.getCourseExecutionId();
         CourseExecution courseExecution = courseExecutionRepository.findById(courseExecutionId).orElseThrow(() -> new TutorException(COURSE_EXECUTION_NOT_FOUND, courseExecutionId));
         Course courseAux = courseExecution.getCourse();
 
-        Set<Topic> topics = new HashSet<>();
-        getTournamentTopics(topicsDto, courseAux, topics);
+        Set<Topic> topics = defTopics(topicsDto);
+        //topics = getTournamentTopics(topicsDto, courseAux);
 
         LocalDateTime startDate = tournamentDto.getStartDateDate();
         LocalDateTime conclusionDate = tournamentDto.getConclusionDateDate();
@@ -72,23 +72,39 @@ public class TournamentService {
         Integer numberOfQuestions = tournamentDto.getNumberOfQuestions();
         Integer id = tournamentDto.getId();
         tournament = new Tournament(numberOfQuestions, startDate, conclusionDate, topics);
-        tournament.setId(id);
+        //tournament.setId(id);
+
         tournament.setStatus(Tournament.Status.CREATED);
         tournament.setCourseExecution(courseExecution);
         tournament.setCurrentDate(currentDate);
+        tournament.setConclusionDate(conclusionDate);
+        tournament.setStartDate(startDate);
         tournamentRepository.save(tournament);
 
         return new TournamentDto(tournament);
     }
 
-    private void getTournamentTopics(List<TopicDto> topicsDto, Course courseAux, Set<Topic> topics) {
-        Iterator<TopicDto> iterator = topicsDto.iterator();
-        Topic topicAux;
+    private Set<Topic> defTopics (List<Integer> topics){
+        Iterator iterator = topics.iterator();
+        Set <Topic> topicAux = new HashSet<>();
         while(iterator.hasNext()){
-            TopicDto topicDtoAux = iterator.next();
-            topicAux = new Topic(courseAux, topicDtoAux);
-            topics.add(topicAux);
+            Integer aux = (Integer) iterator.next();
+            Topic topicAuxiliar = (Topic) topicRepository.findById(aux).get();
+            topicAux.add(topicAuxiliar);
         }
+        return topicAux;
+    }
+
+    private Set<Topic> getTournamentTopics(List<TopicDto> topicsDto, Course courseAux) {
+        Iterator iterator = topicsDto.iterator();
+        Topic topicAux;
+        Set<Topic> topicsAux = new HashSet<>();
+        while(iterator.hasNext()){
+            TopicDto topicDtoAux = (TopicDto) iterator.next();
+            topicAux = new Topic(courseAux, topicDtoAux);
+            topicsAux.add(topicAux);
+        }
+        return topicsAux;
     }
 
     @Transactional(isolation = Isolation.REPEATABLE_READ)
