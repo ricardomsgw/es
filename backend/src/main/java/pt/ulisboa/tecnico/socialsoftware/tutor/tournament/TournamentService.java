@@ -118,4 +118,12 @@ public class TournamentService {
         return new TournamentDto(tournament);
     }
 
+    @Retryable(
+            value = { SQLException.class },
+            backoff = @Backoff(delay = 5000))
+    @Transactional(isolation = Isolation.REPEATABLE_READ)
+    public List<TournamentDto> getTournaments(int courseExecutionId) {
+        return null;
+    }
+
 }
