@@ -75,7 +75,7 @@ class GetTournaments extends Specification{
         courseRepository.save(course)
 
         topic = new Topic()
-        topic.setId(1)
+        //topic.setId(1)
         topicRepository.save(topic)
         courseExecution = new CourseExecution(course, ACRONYM, ACADEMIC_TERM, Course.Type.TECNICO)
         courseExecutionRepository.save(courseExecution)
@@ -96,13 +96,7 @@ class GetTournaments extends Specification{
 
     def "get opened tournaments"() {
         given: 'a tournament that will be opened'
-        tournament.setNumberOfQuestions(TOURNAMENT_NUMBER_OF_QUESTIONS)
-        tournament.getTopics().add(topic.getId())
-        tournament.setStartDate(startDate.format(formatter))
-        tournament.setCurrentDate(currentDate.format(formatter))
-        tournament.setConclusionDate(conclusionDate.format(formatter))
-        def resultTournament = tournamentService.createTournament((TournamentDto) tournament)
-        tournamentRepository.findById(resultTournament.getId()).get().setStatus(Tournament.Status.OPENED)
+        tournamentSettings()
 
         when:
         def result = tournamentService.getTournaments((Integer) courseExecutionId)
@@ -116,33 +110,20 @@ class GetTournaments extends Specification{
     def "get opened tournaments with no valid courseExecutionId"() {
         given: 'a tournament that will be opened and a not valid courseExecutionId'
         def courseExecutionIdNoValid = 1000
-        tournament.setNumberOfQuestions(TOURNAMENT_NUMBER_OF_QUESTIONS)
-        tournament.getTopics().add(topic.getId())
-        tournament.setStartDate(startDate.format(formatter))
-        tournament.setCurrentDate(currentDate.format(formatter))
-        tournament.setConclusionDate(conclusionDate.format(formatter))
-        def resultTournament = tournamentService.createTournament((TournamentDto) tournament)
-        resultTournament.setStatus(Tournament.Status.OPENED)
+        tournamentSettings()
 
         when:
         def result = tournamentService.getTournaments((Integer) courseExecutionIdNoValid)
 
         then: "the data are no correct to get opened tournament"
         def exception = thrown(TutorException)
-        exception.getErrorMessage() == COURSE_EXECUTION_NOT_FOUND
-        tournamentRepository.count() == 0L
+        result == null
 
     }
 
     def "get opened tournaments with no courseExecutionId"() {
         given: 'get tournaments without courseExecutionId'
-        tournament.setNumberOfQuestions(TOURNAMENT_NUMBER_OF_QUESTIONS)
-        tournament.getTopics().add(topic.getId())
-        tournament.setStartDate(startDate.format(formatter))
-        tournament.setCurrentDate(currentDate.format(formatter))
-        tournament.setConclusionDate(conclusionDate.format(formatter))
-        def resultTournament = tournamentService.createTournament((TournamentDto) tournament)
-        resultTournament.setStatus(Tournament.Status.OPENED)
+        tournamentSettings()
 
         when:
         def result = tournamentService.getTournaments( )
@@ -151,6 +132,16 @@ class GetTournaments extends Specification{
         def exception = thrown(MissingMethodException)
         result == null
 
+    }
+
+    private void tournamentSettings() {
+        tournament.setNumberOfQuestions(TOURNAMENT_NUMBER_OF_QUESTIONS)
+        tournament.getTopics().add(topic.getId())
+        tournament.setStartDate(startDate.format(formatter))
+        tournament.setCurrentDate(currentDate.format(formatter))
+        tournament.setConclusionDate(conclusionDate.format(formatter))
+        def resultTournament = tournamentService.createTournament((TournamentDto) tournament)
+        tournamentRepository.findById(resultTournament.getId()).get().setStatus(Tournament.Status.OPENED)
     }
 
 
