@@ -10,10 +10,14 @@ import pt.ulisboa.tecnico.socialsoftware.tutor.course.Course;
 import pt.ulisboa.tecnico.socialsoftware.tutor.course.CourseDto;
 import pt.ulisboa.tecnico.socialsoftware.tutor.course.CourseExecution;
 import pt.ulisboa.tecnico.socialsoftware.tutor.course.CourseService;
+
 import pt.ulisboa.tecnico.socialsoftware.tutor.question.QuestionService;
 import pt.ulisboa.tecnico.socialsoftware.tutor.question.api.QuestionController;
 import pt.ulisboa.tecnico.socialsoftware.tutor.question.dto.TopicDto;
 import pt.ulisboa.tecnico.socialsoftware.tutor.quiz.dto.QuizDto;
+
+import pt.ulisboa.tecnico.socialsoftware.tutor.question.dto.QuestionDto;
+
 import pt.ulisboa.tecnico.socialsoftware.tutor.tournament.TournamentService;
 import pt.ulisboa.tecnico.socialsoftware.tutor.user.User;
 import pt.ulisboa.tecnico.socialsoftware.tutor.user.dto.StudentDto;
@@ -22,6 +26,7 @@ import pt.ulisboa.tecnico.socialsoftware.tutor.user.dto.UserDto;
 import javax.validation.Valid;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+
 import java.util.List;
 
 @RestController
@@ -75,5 +80,11 @@ public class TournamentController {
         if (tournament.getStartDate() !=null && !tournament.getStartDate().matches("(\\d{4})-(\\d{2})-(\\d{2}) (\\d{2}):(\\d{2})"))
             tournament.setStartDate(LocalDateTime.parse(tournament.getStartDate().replaceAll(".$", ""), DateTimeFormatter.ISO_DATE_TIME).format(formatter));
 
+    }
+
+    @PutMapping("/tournaments/{tournamentId}")
+    @PreAuthorize("hasRole('ROLE_STUDENT')")
+    public TournamentDto addUser(@PathVariable Integer tournamentId, @Valid @RequestBody UserDto userDto) {
+        return this.tournamentService.addUser(userDto.getId(), tournamentId);
     }
 }
