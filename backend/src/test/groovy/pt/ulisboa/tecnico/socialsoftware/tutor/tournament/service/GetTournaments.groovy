@@ -9,7 +9,9 @@ import pt.ulisboa.tecnico.socialsoftware.tutor.course.CourseExecution
 import pt.ulisboa.tecnico.socialsoftware.tutor.course.CourseExecutionRepository
 import pt.ulisboa.tecnico.socialsoftware.tutor.course.CourseRepository
 import pt.ulisboa.tecnico.socialsoftware.tutor.exceptions.TutorException
+import pt.ulisboa.tecnico.socialsoftware.tutor.question.domain.Topic
 import pt.ulisboa.tecnico.socialsoftware.tutor.question.dto.TopicDto
+import pt.ulisboa.tecnico.socialsoftware.tutor.question.repository.TopicRepository
 import pt.ulisboa.tecnico.socialsoftware.tutor.user.User
 import pt.ulisboa.tecnico.socialsoftware.tutor.user.UserRepository
 import spock.lang.Specification
@@ -42,6 +44,9 @@ class GetTournaments extends Specification{
     CourseRepository courseRepository
 
     @Autowired
+    TopicRepository topicRepository
+
+    @Autowired
     CourseExecutionRepository courseExecutionRepository
 
     @Autowired
@@ -65,11 +70,13 @@ class GetTournaments extends Specification{
         formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")
         tournament = new TournamentDto()
         user = new User()
-        topic = new TopicDto()
 
         course = new Course(COURSE_NAME, Course.Type.TECNICO)
         courseRepository.save(course)
 
+        topic = new Topic()
+        topic.setId(1)
+        topicRepository.save(topic)
         courseExecution = new CourseExecution(course, ACRONYM, ACADEMIC_TERM, Course.Type.TECNICO)
         courseExecutionRepository.save(courseExecution)
 
@@ -90,12 +97,12 @@ class GetTournaments extends Specification{
     def "get opened tournaments"() {
         given: 'a tournament that will be opened'
         tournament.setNumberOfQuestions(TOURNAMENT_NUMBER_OF_QUESTIONS)
-        tournament.getTopics().add(topic)
+        tournament.getTopics().add(topic.getId())
         tournament.setStartDate(startDate.format(formatter))
         tournament.setCurrentDate(currentDate.format(formatter))
         tournament.setConclusionDate(conclusionDate.format(formatter))
         def resultTournament = tournamentService.createTournament((TournamentDto) tournament)
-        resultTournament.setStatus(Tournament.Status.OPENED)
+        tournamentRepository.findById(resultTournament.getId()).get().setStatus(Tournament.Status.OPENED)
 
         when:
         def result = tournamentService.getTournaments((Integer) courseExecutionId)
@@ -110,7 +117,7 @@ class GetTournaments extends Specification{
         given: 'a tournament that will be opened and a not valid courseExecutionId'
         def courseExecutionIdNoValid = 1000
         tournament.setNumberOfQuestions(TOURNAMENT_NUMBER_OF_QUESTIONS)
-        tournament.getTopics().add(topic)
+        tournament.getTopics().add(topic.getId())
         tournament.setStartDate(startDate.format(formatter))
         tournament.setCurrentDate(currentDate.format(formatter))
         tournament.setConclusionDate(conclusionDate.format(formatter))
@@ -130,7 +137,7 @@ class GetTournaments extends Specification{
     def "get opened tournaments with no courseExecutionId"() {
         given: 'get tournaments without courseExecutionId'
         tournament.setNumberOfQuestions(TOURNAMENT_NUMBER_OF_QUESTIONS)
-        tournament.getTopics().add(topic)
+        tournament.getTopics().add(topic.getId())
         tournament.setStartDate(startDate.format(formatter))
         tournament.setCurrentDate(currentDate.format(formatter))
         tournament.setConclusionDate(conclusionDate.format(formatter))
@@ -141,9 +148,8 @@ class GetTournaments extends Specification{
         def result = tournamentService.getTournaments( )
 
         then: "the data are no correct to get opened tournament"
-        def exception = thrown(TutorException)
-        exception.getErrorMessage() == COURSE_EXECUTION_NOT_FOUND
-        tournamentRepository.count() == 0L
+        def exception = thrown(MissingMethodException)
+        result == null
 
     }
 
