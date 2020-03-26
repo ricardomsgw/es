@@ -139,7 +139,7 @@ public class CourseExecution {
         Set<Tournament> openedTournaments = new HashSet<>();
         while (iterator.hasNext()){
             Tournament tournamentAux = iterator.next();
-            if(tournamentAux.getStatus() == Tournament.Status.CREATED)
+            if(tournamentAux.getStatus() == Tournament.Status.OPENED)
                 openedTournaments.add(tournamentAux);
         }
         return openedTournaments;

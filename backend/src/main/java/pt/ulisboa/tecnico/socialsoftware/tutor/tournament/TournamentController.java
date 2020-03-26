@@ -31,7 +31,7 @@ import java.util.List;
 
 @RestController
 public class TournamentController {
-    //private static Logger logger = LoggerFactory.getLogger(TournamentController.class);
+
     static final Integer TOURNAMENT_NUMBER_OF_QUESTIONS = 3;
     static final Integer COURSE_EXECUTION_ID = 10;
     static final Integer TOURNAMENT_ID = 11;
@@ -42,28 +42,9 @@ public class TournamentController {
     @Autowired
     private TournamentService tournamentService;
 
-
-    /*TournamentController(TournamentService tournamentService) {
-        this.tournamentService = tournamentService;
-    }*/
-
-    @GetMapping("/admin/courses/executions/{courseExecutionId}")
-    @PreAuthorize("hasRole('ROLE_STUDENT')")
-    public  List<TournamentDto> getTournaments(@PathVariable Integer courseExecutionId){
-        return this.tournamentService.getTournaments(courseExecutionId);
-    }
-
-
-    /*@PutMapping("/tournaments/{tournamentId}")
-    @PreAuthorize("hasRole('ROLE_STUDENT')")
-    public TournamentDto addUser(@PathVariable Integer tournamentId, @RequestBody UserDto userDto) {
-        return this.tournamentService.addUser(userDto.getId(), tournamentId);
-    }*/
-
     @PostMapping("/tournaments")
     @PreAuthorize("hasRole('ROLE_STUDENT')")
     public TournamentDto createTournament(@Valid @RequestBody TournamentDto tournamentDto) {
-        System.out.println("PRINT");
         return tournamentService.createTournament(tournamentDto);
 
     }

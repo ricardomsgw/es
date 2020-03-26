@@ -189,34 +189,6 @@
             </JSONPathAssertion>
             <hashTree/>
           </hashTree>
-          <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="JDBC Request Nº1" enabled="true">
-            <stringProp name="dataSource">tutordb</stringProp>
-            <stringProp name="queryType">Select Statement</stringProp>
-            <stringProp name="query">select *
-from courses</stringProp>
-            <stringProp name="queryArguments"></stringProp>
-            <stringProp name="queryArgumentsTypes"></stringProp>
-            <stringProp name="variableNames"></stringProp>
-            <stringProp name="resultVariable">dataFromDB</stringProp>
-            <stringProp name="queryTimeout"></stringProp>
-            <stringProp name="resultSetMaxRows"></stringProp>
-            <stringProp name="resultSetHandler">Store as String</stringProp>
-          </JDBCSampler>
-          <hashTree>
-            <BeanShellAssertion guiclass="BeanShellAssertionGui" testclass="BeanShellAssertion" testname="BeanShell Assertion" enabled="true">
-              <stringProp name="BeanShellAssertion.query">if (!ResponseCode.equals(&quot;200&quot;) || vars.getObject(&quot;dataFromDB&quot;).size() == 0) {
-
-	FailureMessage = &quot;!!!!!!!!!!! No connection to the database or data not received !!!!!!!!!!!&quot;;
-	Failure = true;	
-	prev.setStopThread(true);
-	
-}</stringProp>
-              <stringProp name="BeanShellAssertion.filename"></stringProp>
-              <stringProp name="BeanShellAssertion.parameters"></stringProp>
-              <boolProp name="BeanShellAssertion.resetInterpreter">false</boolProp>
-            </BeanShellAssertion>
-            <hashTree/>
-          </hashTree>
         </hashTree>
         <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="true">
           <boolProp name="ResultCollector.error_logging">false</boolProp>

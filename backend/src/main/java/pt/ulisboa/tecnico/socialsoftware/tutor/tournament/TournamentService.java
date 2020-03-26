@@ -118,15 +118,4 @@ public class TournamentService {
         return new TournamentDto(tournament);
     }
 
-    @Retryable(
-            value = { SQLException.class },
-            backoff = @Backoff(delay = 5000))
-    @Transactional(isolation = Isolation.REPEATABLE_READ)
-    public List<TournamentDto> getTournaments(int courseExecutionId) {
-        CourseExecution courseExecution= courseExecutionRepository.findById(courseExecutionId).orElseThrow(() -> new TutorException(COURSE_NOT_FOUND, courseExecutionId));
-
-        return courseExecution.getOpenedTournaments().stream()
-                .map(TournamentDto::new)
-                .collect(Collectors.toList());
-    }
 }
