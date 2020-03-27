@@ -414,8 +414,8 @@ where status = &apos;CREATED&apos;;</stringProp>
           <stringProp name="checkQuery">select 1</stringProp>
           <stringProp name="dbUrl">jdbc:postgresql://localhost:5432/tutordb</stringProp>
           <stringProp name="driver">org.postgresql.Driver</stringProp>
-          <stringProp name="username">ricardo</stringProp>
-          <stringProp name="password">123456</stringProp>
+          <stringProp name="username">maria</stringProp>
+          <stringProp name="password">1996064</stringProp>
           <stringProp name="connectionProperties"></stringProp>
         </JDBCDataSource>
         <hashTree/>

@@ -95,7 +95,7 @@
             <CSVDataSet guiclass="TestBeanGUI" testclass="CSVDataSet" testname="Data to create tournament" enabled="true">
               <stringProp name="delimiter">,</stringProp>
               <stringProp name="fileEncoding"></stringProp>
-              <stringProp name="filename">/home/maria/Documentos/sextoSemestre/ES/es20tg_51-project/backend/jmeter/tournaments/teste3.csv</stringProp>
+              <stringProp name="filename">teste3.csv</stringProp>
               <boolProp name="ignoreFirstLine">false</boolProp>
               <boolProp name="quotedData">false</boolProp>
               <boolProp name="recycle">true</boolProp>
@@ -287,7 +287,7 @@ where status = &apos;CREATED&apos;;</stringProp>
           <hashTree/>
           <LoopController guiclass="LoopControlPanel" testclass="LoopController" testname="Loop 10 times" enabled="true">
             <boolProp name="LoopController.continue_forever">true</boolProp>
-            <stringProp name="LoopController.loops">1</stringProp>
+            <stringProp name="LoopController.loops">10</stringProp>
           </LoopController>
           <hashTree>
             <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="HTTP Request to get tournaments" enabled="true">
