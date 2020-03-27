@@ -84,7 +84,7 @@ public class TournamentController {
 
     @PutMapping("/tournaments/{tournamentId}")
     @PreAuthorize("hasRole('ROLE_STUDENT')")
-    public TournamentDto addUser(@PathVariable Integer tournamentId, @Valid @RequestBody UserDto userDto) {
-        return this.tournamentService.addUser(userDto.getId(), tournamentId);
+    public TournamentDto addUser(@PathVariable Integer tournamentId, @Valid @RequestBody Integer userDto) {
+        return this.tournamentService.addUser(userDto, tournamentId);
     }
 }
