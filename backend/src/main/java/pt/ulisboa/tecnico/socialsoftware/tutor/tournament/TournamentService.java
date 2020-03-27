@@ -71,17 +71,14 @@ public class TournamentService {
         Integer numberOfQuestions = tournamentDto.getNumberOfQuestions();
         Integer id = tournamentDto.getId();
         tournament = new Tournament(numberOfQuestions, startDate, conclusionDate, topics);
-        //tournament.setId(id);
-
         tournament.setStatus(Tournament.Status.CREATED);
         tournament.setCourseExecution(courseExecution);
         tournament.setCurrentDate(currentDate);
         tournament.setConclusionDate(conclusionDate);
         tournament.setStartDate(startDate);
         tournamentRepository.save(tournament);
-        Set<Topic> list = tournamentRepository.findById(tournament.getId()).get().getTopics();
-        System.out.println(list);
-        return new TournamentDto(tournament);
+        TournamentDto tournamentAux = new TournamentDto(tournament);
+        return tournamentAux;
     }
 
     private Set<Topic> defTopics (List<Integer> topics){
@@ -131,10 +128,17 @@ public class TournamentService {
             backoff = @Backoff(delay = 5000))
     @Transactional(isolation = Isolation.REPEATABLE_READ)
     public List<TournamentDto> getTournaments(int courseExecutionId) {
-        CourseExecution courseExecution= courseExecutionRepository.findById(courseExecutionId).orElseThrow(() -> new TutorException(COURSE_NOT_FOUND, courseExecutionId));
+        CourseExecution courseExecution= courseExecutionRepository.findById(courseExecutionId).orElseThrow(() -> new TutorException(COURSE_EXECUTION_NOT_FOUND, courseExecutionId));
+        List<Integer> listAux = new ArrayList<>();
+        Iterator it = courseExecution.getOpenedTournaments().iterator();
+        while(it.hasNext()){
+            Tournament tAux = (Tournament) it.next();
+            System.out.println(tAux.getTopics());
 
+        }
         return courseExecution.getOpenedTournaments().stream()
                 .map(TournamentDto::new)
                 .collect(Collectors.toList());
     }
+
 }

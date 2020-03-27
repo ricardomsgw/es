@@ -50,6 +50,14 @@ public class Topic {
         course.addTopic(this);
     }
 
+    public void addTournaments(Tournament tournament){
+        tournaments.add(tournament);
+    }
+
+    public Set<Tournament> getTournaments(){
+        return tournaments;
+    }
+
     public Integer getId() {
         return id;
     }
