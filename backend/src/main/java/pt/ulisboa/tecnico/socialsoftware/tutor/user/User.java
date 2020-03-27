@@ -4,6 +4,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import pt.ulisboa.tecnico.socialsoftware.tutor.DDP.Submission;
 import pt.ulisboa.tecnico.socialsoftware.tutor.answer.domain.QuizAnswer;
 import pt.ulisboa.tecnico.socialsoftware.tutor.course.CourseExecution;
 import pt.ulisboa.tecnico.socialsoftware.tutor.question.domain.Question;
@@ -62,6 +63,9 @@ public class User implements UserDetails {
 
     @ManyToMany(cascade = CascadeType.ALL, fetch=FetchType.LAZY)
     private Set <Tournament> tournaments = new HashSet<>();
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user", fetch = FetchType.LAZY, orphanRemoval=true)
+    private Set<Submission> submissions = new HashSet<>();
 
     public User() {
     }
@@ -366,6 +370,10 @@ public class User implements UserDetails {
 
     public void addCourse(CourseExecution course) {
         this.courseExecutions.add(course);
+    }
+
+    public void addMessage(Submission message) {
+        this.submissions.add(message);
     }
 
     @Override

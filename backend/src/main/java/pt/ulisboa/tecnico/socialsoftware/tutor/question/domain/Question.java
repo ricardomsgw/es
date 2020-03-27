@@ -1,5 +1,6 @@
 package pt.ulisboa.tecnico.socialsoftware.tutor.question.domain;
 
+import pt.ulisboa.tecnico.socialsoftware.tutor.DDP.Submission;
 import pt.ulisboa.tecnico.socialsoftware.tutor.answer.domain.QuestionAnswer;
 import pt.ulisboa.tecnico.socialsoftware.tutor.course.Course;
 import pt.ulisboa.tecnico.socialsoftware.tutor.exceptions.TutorException;
@@ -64,6 +65,9 @@ public class Question {
 
     @ManyToMany(mappedBy = "questions")
     private Set<Topic> topics = new HashSet<>();
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "question", orphanRemoval=true)
+    private List<Submission> submissions = new ArrayList<>();
 
     @ManyToOne
     @JoinColumn(name = "course_id")
@@ -201,6 +205,8 @@ public class Question {
     public void addTopic(Topic topic) {
         topics.add(topic);
     }
+
+    public void addMessage(Submission message) {submissions.add(message);}
 
     public void remove() {
         canRemove();
