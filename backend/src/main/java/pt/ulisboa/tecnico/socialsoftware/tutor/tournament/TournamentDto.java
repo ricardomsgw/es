@@ -4,6 +4,7 @@ import org.springframework.data.annotation.Transient;
 import pt.ulisboa.tecnico.socialsoftware.tutor.question.domain.Topic;
 import pt.ulisboa.tecnico.socialsoftware.tutor.question.dto.TopicDto;
 import pt.ulisboa.tecnico.socialsoftware.tutor.quiz.domain.Quiz;
+import pt.ulisboa.tecnico.socialsoftware.tutor.user.User;
 import pt.ulisboa.tecnico.socialsoftware.tutor.user.dto.UserDto;
 
 import java.io.Serializable;
@@ -19,7 +20,7 @@ public class TournamentDto implements Serializable {
     private Integer tournamentId;
     private int numberOfQuestions;
     private List<Integer> topics = new ArrayList<>();
-    //private List<UserDto> users = new ArrayList<>();
+    private List<Integer> users = new ArrayList<>();
     private String startDate = null;
     private String currentDate = null;
     private String conclusionDate = null;
@@ -38,7 +39,7 @@ public class TournamentDto implements Serializable {
         this.status = tournament.getStatus();
         this.courseExecutionId = tournament.getCourseExecution().getId();
         this.numberOfQuestions = tournament.getNumberOfQuestions();
-        //this.users = tournament.getUsers().stream().map(user -> { UserDto userDto = new UserDto(user); return userDto; }).collect(Collectors.toList());
+        //this.users = tournament.getUsers().stream().map(User::getId).collect(Collectors.toList());
         this.topics = defTopics(tournament);
         checkDates(tournament);
 
@@ -108,11 +109,11 @@ public class TournamentDto implements Serializable {
 
     public void setNumberOfQuestions(int numberOfQuestions) { this.numberOfQuestions = numberOfQuestions; }
 
-    /*public List<UserDto> getUsers() { return users;    }
+    public List<Integer> getUsers() { return users;    }
 
-    public void setUsers(List<UserDto> users) { this.users = users;  }
+    public void setUsers(List<Integer> users) { this.users = users;  }
 
-    public void addUser(UserDto user){ this.users.add(user);}*/
+    public void addUser(Integer userId){ this.users.add(userId);}
 
     public List<Integer> getTopics() { return topics; }
 
