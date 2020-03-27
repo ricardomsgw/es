@@ -39,7 +39,6 @@ public class TournamentDto implements Serializable {
         this.status = tournament.getStatus();
         this.courseExecutionId = tournament.getCourseExecution().getId();
         this.numberOfQuestions = tournament.getNumberOfQuestions();
-        //this.users = tournament.getUsers().stream().map(User::getId).collect(Collectors.toList());
         this.topics = defTopics(tournament);
         checkDates(tournament);
 
