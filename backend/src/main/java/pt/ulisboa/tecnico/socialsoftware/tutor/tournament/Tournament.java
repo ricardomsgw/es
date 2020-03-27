@@ -124,6 +124,7 @@ public class Tournament {
 
 
     public void addTopics(Set<Topic> topics) {
+
         this.topics = topics;
     }
 

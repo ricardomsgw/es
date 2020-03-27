@@ -81,7 +81,9 @@ public class TournamentService {
         tournament.setStartDate(startDate);
         tournamentRepository.save(tournament);
 
-        return new TournamentDto(tournament);
+        TournamentDto tournamentAux = new TournamentDto(tournament);
+        System.out.println(tournamentAux.getTopics());
+        return tournamentAux;
     }
 
     private Set<Topic> defTopics (List<Integer> topics){
@@ -124,7 +126,13 @@ public class TournamentService {
     @Transactional(isolation = Isolation.REPEATABLE_READ)
     public List<TournamentDto> getTournaments(int courseExecutionId) {
         CourseExecution courseExecution= courseExecutionRepository.findById(courseExecutionId).orElseThrow(() -> new TutorException(COURSE_EXECUTION_NOT_FOUND, courseExecutionId));
+        List<Integer> listAux = new ArrayList<>();
+        Iterator it = courseExecution.getOpenedTournaments().iterator();
+        while(it.hasNext()){
+            Tournament tAux = (Tournament) it.next();
+            System.out.println(tAux.getTopics());
 
+        }
         return courseExecution.getOpenedTournaments().stream()
                 .map(TournamentDto::new)
                 .collect(Collectors.toList());
