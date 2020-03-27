@@ -24,13 +24,6 @@ public class Topic {
     @ManyToMany
     private Set<Question> questions = new HashSet<>();
 
-    @ManyToOne
-    private Topic parentTopic;
-
-
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "parentTopic", fetch=FetchType.EAGER)
-    private Set<Topic> childrenTopics = new HashSet<>();
-
     @ManyToMany(cascade = CascadeType.ALL, fetch=FetchType.EAGER)
     private List<TopicConjunction> topicConjunctions = new ArrayList<>();
 
@@ -48,6 +41,14 @@ public class Topic {
         this.name = topicDto.getName();
         this.course = course;
         course.addTopic(this);
+    }
+
+    public void addTournaments(Tournament tournament){
+        tournaments.add(tournament);
+    }
+
+    public Set<Tournament> getTournaments(){
+        return tournaments;
     }
 
     public Integer getId() {
@@ -68,18 +69,6 @@ public class Topic {
 
     public Set<Question> getQuestions() {
         return questions;
-    }
-
-    public Topic getParentTopic() {
-        return parentTopic;
-    }
-
-    public void setParentTopic(Topic parentTopic) {
-        this.parentTopic = parentTopic;
-    }
-
-    public Set<Topic> getChildrenTopics() {
-        return childrenTopics;
     }
 
     public List<TopicConjunction> getTopicConjunctions() {
@@ -120,7 +109,6 @@ public class Topic {
         return "Topic{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
-                ", parentTopic=" + parentTopic +
                 '}';
     }
 
@@ -131,15 +119,7 @@ public class Topic {
         getQuestions().forEach(question -> question.getTopics().remove(this));
         getQuestions().clear();
 
-        if (this.parentTopic != null) {
-            parentTopic.getChildrenTopics().remove(this);
-            parentTopic.getChildrenTopics().addAll(this.getChildrenTopics());
-        }
-
-        this.childrenTopics.forEach(topic -> topic.parentTopic = this.parentTopic);
         this.topicConjunctions.forEach(topicConjunction -> topicConjunction.getTopics().remove(this));
 
-        this.parentTopic = null;
-        this.childrenTopics.clear();
     }
 }

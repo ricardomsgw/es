@@ -23,10 +23,7 @@ import javax.persistence.PersistenceContext;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static pt.ulisboa.tecnico.socialsoftware.tutor.exceptions.ErrorMessage.*;
@@ -35,10 +32,14 @@ import static pt.ulisboa.tecnico.socialsoftware.tutor.exceptions.ErrorMessage.*;
 public class TournamentService {
 
     @Autowired
-    private TournamentRepository tournamentRepository;
+    private CourseRepository courseRepository;
 
     @Autowired
     private CourseExecutionRepository courseExecutionRepository;
+
+    @Autowired
+    private TournamentRepository tournamentRepository;
+
 
     @Autowired
     private TopicRepository topicRepository;
@@ -56,48 +57,83 @@ public class TournamentService {
     public TournamentDto createTournament(TournamentDto tournamentDto){
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
         Tournament tournament = null;
-        List<TopicDto> topicsDto = tournamentDto.getTopics();
+        List<Integer> topicsDto = tournamentDto.getTopics();
 
         int courseExecutionId = tournamentDto.getCourseExecutionId();
         CourseExecution courseExecution = courseExecutionRepository.findById(courseExecutionId).orElseThrow(() -> new TutorException(COURSE_EXECUTION_NOT_FOUND, courseExecutionId));
         Course courseAux = courseExecution.getCourse();
 
-        Set<Topic> topics = new HashSet<>();
-        getTournamentTopics(topicsDto, courseAux, topics);
-
+        Set<Topic> topics = defTopics(topicsDto);
         LocalDateTime startDate = tournamentDto.getStartDateDate();
         LocalDateTime conclusionDate = tournamentDto.getConclusionDateDate();
         LocalDateTime currentDate = tournamentDto.getCurrentDateDate();
         Integer numberOfQuestions = tournamentDto.getNumberOfQuestions();
         Integer id = tournamentDto.getId();
         tournament = new Tournament(numberOfQuestions, startDate, conclusionDate, topics);
-        tournament.setId(id);
         tournament.setStatus(Tournament.Status.CREATED);
         tournament.setCourseExecution(courseExecution);
         tournament.setCurrentDate(currentDate);
+        tournament.setConclusionDate(conclusionDate);
+        tournament.setStartDate(startDate);
         tournamentRepository.save(tournament);
-
-        return new TournamentDto(tournament);
+        TournamentDto tournamentAux = new TournamentDto(tournament);
+        return tournamentAux;
     }
 
-    private void getTournamentTopics(List<TopicDto> topicsDto, Course courseAux, Set<Topic> topics) {
-        Iterator<TopicDto> iterator = topicsDto.iterator();
-        Topic topicAux;
+    private Set<Topic> defTopics (List<Integer> topics){
+        Iterator iterator = topics.iterator();
+        Set <Topic> topicAux = new HashSet<>();
         while(iterator.hasNext()){
-            TopicDto topicDtoAux = iterator.next();
-            topicAux = new Topic(courseAux, topicDtoAux);
-            topics.add(topicAux);
+            Integer aux = (Integer) iterator.next();
+            Topic topicAuxiliar = (Topic) topicRepository.findById(aux).get();
+            topicAux.add(topicAuxiliar);
         }
+        return topicAux;
+    }
+
+    private Set<Topic> getTournamentTopics(List<TopicDto> topicsDto, Course courseAux) {
+        Iterator iterator = topicsDto.iterator();
+        Topic topicAux;
+        Set<Topic> topicsAux = new HashSet<>();
+        while(iterator.hasNext()){
+            TopicDto topicDtoAux = (TopicDto) iterator.next();
+            topicAux = new Topic(courseAux, topicDtoAux);
+            topicsAux.add(topicAux);
+        }
+        return topicsAux;
     }
 
     @Transactional(isolation = Isolation.REPEATABLE_READ)
     public TournamentDto addUser(int userId, int tournamentId){
         Tournament tournament = tournamentRepository.findById(tournamentId).orElseThrow(() ->new TutorException(TOURNAMENT_NOT_FOUND, tournamentId));
 
+
         User user = userRepository.findById(userId).orElseThrow(() ->new TutorException(USER_NOT_FOUND, userId));
-        tournament.addUser(user);
+        tournamentRepository.findById(tournamentId).get().addUser(user);
 
         entityManager.persist(tournament);
-        return new TournamentDto(tournament);
+        TournamentDto tournamentDto = new TournamentDto(tournament);
+
+        List<Integer> usersId = tournament.getUsers().stream().map(User::getId).collect(Collectors.toList());
+        tournamentDto.setUsers(usersId);
+        return tournamentDto;
     }
+
+    @Retryable(
+            value = { SQLException.class },
+            backoff = @Backoff(delay = 5000))
+    @Transactional(isolation = Isolation.REPEATABLE_READ)
+    public List<TournamentDto> getTournaments(int courseExecutionId) {
+        CourseExecution courseExecution= courseExecutionRepository.findById(courseExecutionId).orElseThrow(() -> new TutorException(COURSE_EXECUTION_NOT_FOUND, courseExecutionId));
+        List<Integer> listAux = new ArrayList<>();
+        Iterator it = courseExecution.getOpenedTournaments().iterator();
+        while(it.hasNext()){
+            Tournament tAux = (Tournament) it.next();
+
+        }
+        return courseExecution.getOpenedTournaments().stream()
+                .map(TournamentDto::new)
+                .collect(Collectors.toList());
+    }
+
 }
