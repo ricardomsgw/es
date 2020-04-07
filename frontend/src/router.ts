@@ -18,6 +18,7 @@ import QuizView from './views/student/quiz/QuizView.vue';
 import ResultsView from './views/student/quiz/ResultsView.vue';
 import StatsView from './views/student/StatsView.vue';
 import ScanView from './views/student/ScanView.vue';
+import CreateTournamentsView from '@/views/student/tournaments/CreateTournamentsView.vue';
 
 import AdminManagementView from './views/admin/AdminManagementView.vue';
 import NotFoundView from './views/NotFoundView.vue';
@@ -173,6 +174,15 @@ let router = new Router({
           component: StatsView,
           meta: {
             title: process.env.VUE_APP_NAME + ' - Stats',
+            requiredAuth: 'Student'
+          }
+        },
+        {
+          path: 'createTournaments',
+          name: 'create-tournaments',
+          component: CreateTournamentsView,
+          meta: {
+            title: process.env.VUE_APP_NAME + ' - Create Tournament',
             requiredAuth: 'Student'
           }
         },
