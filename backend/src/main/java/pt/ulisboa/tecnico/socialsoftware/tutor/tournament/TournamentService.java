@@ -64,7 +64,6 @@ public class TournamentService {
         Course courseAux = courseExecution.getCourse();
 
         Set<Topic> topics = defTopics(topicsDto);
-        //topics = getTournamentTopics(topicsDto, courseAux);
         LocalDateTime startDate = tournamentDto.getStartDateDate();
         LocalDateTime conclusionDate = tournamentDto.getConclusionDateDate();
         LocalDateTime currentDate = tournamentDto.getCurrentDateDate();
@@ -108,18 +107,15 @@ public class TournamentService {
     public TournamentDto addUser(int userId, int tournamentId){
         Tournament tournament = tournamentRepository.findById(tournamentId).orElseThrow(() ->new TutorException(TOURNAMENT_NOT_FOUND, tournamentId));
 
-        System.out.println(tournament.getTopics());
 
         User user = userRepository.findById(userId).orElseThrow(() ->new TutorException(USER_NOT_FOUND, userId));
         tournamentRepository.findById(tournamentId).get().addUser(user);
 
-        System.out.println(tournamentRepository.findById(tournamentId).get().getTopics());
         entityManager.persist(tournament);
         TournamentDto tournamentDto = new TournamentDto(tournament);
 
         List<Integer> usersId = tournament.getUsers().stream().map(User::getId).collect(Collectors.toList());
         tournamentDto.setUsers(usersId);
-        System.out.println(tournamentDto.getTopics());
         return tournamentDto;
     }
 
@@ -133,7 +129,6 @@ public class TournamentService {
         Iterator it = courseExecution.getOpenedTournaments().iterator();
         while(it.hasNext()){
             Tournament tAux = (Tournament) it.next();
-            System.out.println(tAux.getTopics());
 
         }
         return courseExecution.getOpenedTournaments().stream()
