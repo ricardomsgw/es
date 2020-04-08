@@ -1,13 +1,14 @@
 import Course from '@/models/user/Course';
+import Topic from '@/models/management/Topic';
 
 export default class Tournament {
   tournamentId: number | undefined;
-  courseExecutionId: number | undefined;
-  status: string | undefined;
+  courseExecutionId: number = 11;
+  status: string = 'CREATED';
   startDate: string | undefined;
   conclusionDate: string | undefined;
   numberOfQuestions: number | undefined;
-  topics: Array<number> = [];
+  topics: number[] = [82, 83];
 
   constructor(jsonObj?: Tournament) {
     if (jsonObj) {
@@ -18,10 +19,7 @@ export default class Tournament {
       this.conclusionDate = jsonObj.conclusionDate;
       this.status = jsonObj.status;
       this.numberOfQuestions = jsonObj.numberOfQuestions;
-
-      for (i; i < jsonObj.topics.length; i++) {
-        this.topics.push(jsonObj.topics[i]);
-      }
+      //this.topics = jsonObj.topics.map(Number);
     }
   }
 }

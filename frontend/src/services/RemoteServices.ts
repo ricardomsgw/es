@@ -549,6 +549,16 @@ export default class RemoteServices {
         throw Error(await this.errorMessage(error));
       });
   }
+  static async createTournament(tournament: Tournament): Promise<Tournament> {
+    return httpClient
+      .post('/tournaments', tournament)
+      .then(response => {
+        return new Tournament(response.data);
+      })
+      .catch(async error => {
+        throw Error(await this.errorMessage(error));
+      });
+  }
   static async createCourse(course: Course): Promise<Course> {
     return httpClient
       .post('/admin/courses/executions', course)
