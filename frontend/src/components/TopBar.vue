@@ -164,6 +164,16 @@
               </v-list-item-content>
             </v-list-item>
           </v-list>
+          <v-list dense>
+            <v-list-item to="/student/getTournaments">
+              <v-list-item-action>
+                <v-icon>fa fa-search</v-icon>
+              </v-list-item-action>
+              <v-list-item-content>
+                <v-list-item-content>Get</v-list-item-content>
+              </v-list-item-content>
+            </v-list-item>
+          </v-list>
         </v-menu>
 
         <v-btn to="/student/stats" v-if="isStudent && currentCourse" text dark>
