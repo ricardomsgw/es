@@ -160,7 +160,7 @@
                 <v-icon>create</v-icon>
               </v-list-item-action>
               <v-list-item-content>
-                <v-list-item-content>Create</v-list-item-content>
+                <v-list-item-content>My tournaments</v-list-item-content>
               </v-list-item-content>
             </v-list-item>
           </v-list>
@@ -170,7 +170,7 @@
                 <v-icon>fa fa-search</v-icon>
               </v-list-item-action>
               <v-list-item-content>
-                <v-list-item-content>Get</v-list-item-content>
+                <v-list-item-content>Opened tournaments</v-list-item-content>
               </v-list-item-content>
             </v-list-item>
           </v-list>

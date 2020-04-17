@@ -8,7 +8,7 @@ export default class Tournament {
   startDate: string | undefined;
   conclusionDate: string | undefined;
   numberOfQuestions: number | undefined;
-  topics: number[] = [82, 83];
+  topics: number[] = [];
 
   constructor(jsonObj?: Tournament) {
     if (jsonObj) {
@@ -19,7 +19,7 @@ export default class Tournament {
       this.conclusionDate = jsonObj.conclusionDate;
       this.status = jsonObj.status;
       this.numberOfQuestions = jsonObj.numberOfQuestions;
-      //this.topics = jsonObj.topics.map(Number);
+      this.topics = jsonObj.topics;
     }
   }
 }

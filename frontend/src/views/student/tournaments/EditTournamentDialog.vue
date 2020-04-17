@@ -37,13 +37,33 @@
                 data-cy="Number Of Questions"
               />
             </v-flex>
-              <!-- <v-flex xs24 sm12 md8>
-              <v-text-field
-                v-model="editTournament.topics"
-                label="Topics"
-                data-cy="topics"
-              />
-            </v-flex>-->
+            <v-form>
+              <v-autocomplete
+                :items="topics"
+                multiple
+                item-text="name"
+                item-value="id"
+                return-object
+                v-model="selectTopic"
+                @change="saveTopics()"
+              >
+                <template v-slot:selection="data">
+                  <v-chip
+                    v-bind="data.attrs"
+                    :input-value="data.selected"
+                    close
+                    @click="data.select"
+                  >
+                    {{ data.item.name }}
+                  </v-chip>
+                </template>
+                <template v-slot:item="data">
+                  <v-list-item-content>
+                    <v-list-item-title v-html="data.item.name" />
+                  </v-list-item-content>
+                </template>
+              </v-autocomplete>
+            </v-form>
           </v-layout>
         </v-container>
       </v-card-text>
@@ -71,19 +91,29 @@ import { Component, Model, Prop, Vue } from 'vue-property-decorator';
 import RemoteServices from '@/services/RemoteServices';
 import Course from '@/models/user/Course';
 import Tournament from '@/models/tournaments/Tournament';
+import Topic from '@/models/management/Topic';
 
 @Component
 export default class EditTournamentDialog extends Vue {
   @Model('dialog', Boolean) dialog!: boolean;
+  //@Prop({ type: Array, required: true }) readonly topics!: Topic[];
   @Prop({ type: Tournament, required: true }) readonly tournament!: Tournament;
 
-  editTournament!: Tournament;
+  editTournament: Tournament = new Tournament(this.tournament);
+  topics: Topic[] = [];
+  selectTopic: Topic[] = [];
   //arrayAux!: number[];
   isCreateTournament: boolean = false;
 
-  created() {
-    this.editTournament = new Tournament(this.tournament);
-    //this.isCreateTournament = !!this.editTournament.name;
+  async created() {
+    await this.$store.dispatch('loading');
+    try {
+      //this.editTournament = new Tournament(this.tournament);
+      this.topics = await RemoteServices.getTopics();
+    } catch (error) {
+      await this.$store.dispatch('error', error);
+    }
+    await this.$store.dispatch('clearLoading');
   }
 
   async saveTournament() {
@@ -102,6 +132,10 @@ export default class EditTournamentDialog extends Vue {
 
     if (this.editTournament) {
       try {
+        var i = 0;
+        for (i; i < this.selectTopic.length; i++) {
+          this.editTournament.topics.push(this.selectTopic[i].id);
+        }
         const result = await RemoteServices.createTournament(
           this.editTournament
         );
@@ -110,6 +144,17 @@ export default class EditTournamentDialog extends Vue {
         await this.$store.dispatch('error', error);
       }
     }
+  }
+  saveTopics() {
+    console.log(this.selectTopic[0].id);
+  }
+
+  removeTopic(topic: Topic) {
+    console.log(topic);
+  }
+
+  addTopic(topic: Topic) {
+    console.log(topic);
   }
 }
 </script>
