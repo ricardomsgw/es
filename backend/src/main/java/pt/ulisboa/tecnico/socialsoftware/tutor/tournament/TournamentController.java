@@ -43,8 +43,10 @@ public class TournamentController {
     private TournamentService tournamentService;
 
     @PostMapping("/tournaments")
-    @PreAuthorize("hasRole('ROLE_STUDENT')")
+    @PreAuthorize("hasRole('ROLE_STUDENT')")// missing access to course exec
     public TournamentDto createTournament(@Valid @RequestBody TournamentDto tournamentDto) {
+        // none of the jmeter tests using this worked, response was always: {"timestamp":"x","message":"Tournament with data not valid","debugMessage":null,"subErrors":null}
+        // you show correct outputs in the markdown file, but I can't replicate them
         return tournamentService.createTournament(tournamentDto);
 
     }
@@ -64,13 +66,15 @@ public class TournamentController {
     }
 
     @PutMapping("/tournaments/{tournamentId}")
-    @PreAuthorize("hasRole('ROLE_STUDENT')")
+    @PreAuthorize("hasRole('ROLE_STUDENT')")// missing access to course exec
+    //instead of passing a userDto you could use Principal as in Statement controller
     public TournamentDto addUser(@PathVariable Integer tournamentId, @Valid @RequestBody Integer userDto) {
         return this.tournamentService.addUser(userDto, tournamentId);
     }
 
+    // admin? why? if so why are the other different?
     @GetMapping("/admin/courses/executions/{courseExecutionId}")
-    @PreAuthorize("hasRole('ROLE_STUDENT')")
+    @PreAuthorize("hasRole('ROLE_STUDENT')")// missing access to course exec
     public  List<TournamentDto> getTournaments(@PathVariable Integer courseExecutionId){
         return this.tournamentService.getTournaments(courseExecutionId);
     }
