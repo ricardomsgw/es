@@ -146,11 +146,11 @@
             </v-list-item>
           </v-list>
         </v-menu>
-
+        <!-- Tournament Group-->
         <v-menu offset-y v-if="isStudent && currentCourse" open-on-hover>
           <template v-slot:activator="{ on }">
-            <v-btn v-on="on" text dark>
-              Tournaments
+            <v-btn v-on="on" text dark data-cy="Tournaments">
+                Tournaments
               <v-icon>fas fa-trophy</v-icon>
             </v-btn>
           </template>
@@ -160,7 +160,7 @@
                 <v-icon>create</v-icon>
               </v-list-item-action>
               <v-list-item-content>
-                <v-list-item-content>My tournaments</v-list-item-content>
+                <v-list-item-title data-cy="MyTournaments">My tournaments</v-list-item-title>
               </v-list-item-content>
             </v-list-item>
           </v-list>
@@ -170,7 +170,7 @@
                 <v-icon>fa fa-search</v-icon>
               </v-list-item-action>
               <v-list-item-content>
-                <v-list-item-content>Opened tournaments</v-list-item-content>
+                <v-list-item-title data-cy="OpenedTournaments">Opened tournaments</v-list-item-title>
               </v-list-item-content>
             </v-list-item>
           </v-list>

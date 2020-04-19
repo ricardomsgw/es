@@ -20,21 +20,21 @@
               <v-text-field
                 v-model="editTournament.startDate"
                 label="Start Date"
-                data-cy="Start Date"
+                data-cy="StartDate"
               />
             </v-flex>
             <v-flex xs24 sm12 md8>
               <v-text-field
                 v-model="editTournament.conclusionDate"
                 label="Conclusion Date"
-                data-cy="Conclusion Date"
+                data-cy="ConclusionDate"
               />
             </v-flex>
             <v-flex xs24 sm12 md8>
               <v-text-field
                 v-model="editTournament.numberOfQuestions"
                 label="Number Of Questions"
-                data-cy="Number Of Questions"
+                data-cy="NumberOfQuestions"
               />
             </v-flex>
             <v-form>
@@ -43,6 +43,7 @@
                 multiple
                 item-text="name"
                 item-value="id"
+                data-cy="Topics"
                 return-object
                 v-model="selectTopic"
                 @change="saveTopics()"

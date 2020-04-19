@@ -18,7 +18,7 @@
             class="mx-2"
           />
           <v-spacer />
-          <v-btn color="primary" dark @click="newTournament"
+          <v-btn color="primary" dark @click="newTournament" data-cy="createTournamentButton"
             >New Tournament</v-btn
           >
         </v-card-title>
