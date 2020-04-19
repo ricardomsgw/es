@@ -150,7 +150,7 @@
         <v-menu offset-y v-if="isStudent && currentCourse" open-on-hover>
           <template v-slot:activator="{ on }">
             <v-btn v-on="on" text dark data-cy="Tournaments">
-                Tournaments
+              Tournaments
               <v-icon>fas fa-trophy</v-icon>
             </v-btn>
           </template>
@@ -191,7 +191,7 @@
           <v-icon>fa fa-book</v-icon>
         </v-btn>
 
-        <v-btn v-if="isLoggedIn" @click="logout" text dark>
+        <v-btn v-if="isLoggedIn" @click="logout" data-cy="logout" text dark>
           Logout
           <v-icon>fas fa-sign-out-alt</v-icon>
         </v-btn>

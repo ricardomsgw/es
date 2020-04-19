@@ -24,18 +24,18 @@
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite("visit", (originalFn, url, options) => { ... })
 /// <reference types="Cypress" />
-Cypress.Commands.add('demoAdminLogin', () => {
+/*Cypress.Commands.add('demoAdminLogin', () => {
     cy.visit('/')
     cy.get('[data-cy="adminButton"]').click()
     cy.contains('Administration').click()
     cy.contains('Manage Courses').click()
-})
+})*/
 
-Cypress.Commands.add('demoStudentLogin', () => {
+Cypress.Commands.add('otro', () => {
     cy.visit('/')
     cy.get('[data-cy="studentButton"]').click()
-    cy.contains('Administration').click()
-    cy.contains('Manage Courses').click()
+    cy.get('[data-cy="Tournaments"]').click()
+    cy.get('[data-cy="MyTournaments"]').click()
 })
 
 Cypress.Commands.add('createCourseExecution', (name, acronym, academicTerm) => {
@@ -51,7 +51,8 @@ Cypress.Commands.add('createTournament', (startDate, conclusionDate, numberOfQue
     cy.get('[data-cy="StartDate"]').type(startDate)
     cy.get('[data-cy="ConclusionDate"]').type(conclusionDate)
     cy.get('[data-cy="NumberOfQuestions"]').type(numberOfQuestions)
-    cy.get('[data-cy="Topics"]').type(topics)
+    //cy.get('[data-cy="Topics"]').type(topics)
+    //faltasaveButton
 })
 
 Cypress.Commands.add('closeErrorMessage', (name, acronym, academicTerm) => {
