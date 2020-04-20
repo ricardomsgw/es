@@ -348,7 +348,7 @@
           </v-list-item-action>
           <v-list-item-content>Change course</v-list-item-content>
         </v-list-item>
-        <v-list-item @click="logout" v-if="isLoggedIn">
+        <v-list-item @click="logout" data-cy="logout1" v-if="isLoggedIn">
           <v-list-item-action>
             <v-icon>fas fa-sign-out-alt</v-icon>
           </v-list-item-action>

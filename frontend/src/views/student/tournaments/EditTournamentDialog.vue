@@ -17,18 +17,26 @@
         <v-container grid-list-md fluid>
           <v-layout column wrap>
             <v-flex xs24 sm12 md8>
-              <v-text-field
-                v-model="editTournament.startDate"
-                label="Start Date"
+              <v-datetime-picker
                 data-cy="StartDate"
-              />
+                label="Start Date"
+                format="yyyy-MM-dd HH:mm"
+                date-format="yyyy-MM-dd"
+                time-format="HH:mm"
+                v-model="startDate"
+              >
+              </v-datetime-picker>
             </v-flex>
             <v-flex xs24 sm12 md8>
-              <v-text-field
-                v-model="editTournament.conclusionDate"
-                label="Conclusion Date"
+              <v-datetime-picker
                 data-cy="ConclusionDate"
-              />
+                label="Conclusion Date"
+                format="yyyy-MM-dd HH:mm"
+                date-format="yyyy-MM-dd"
+                time-format="HH:mm"
+                v-model="conclusionDate"
+              >
+              </v-datetime-picker>
             </v-flex>
             <v-flex xs24 sm12 md8>
               <v-text-field
@@ -93,6 +101,7 @@ import RemoteServices from '@/services/RemoteServices';
 import Course from '@/models/user/Course';
 import Tournament from '@/models/tournaments/Tournament';
 import Topic from '@/models/management/Topic';
+import moment from 'moment';
 
 @Component
 export default class EditTournamentDialog extends Vue {
@@ -103,6 +112,8 @@ export default class EditTournamentDialog extends Vue {
   editTournament: Tournament = new Tournament(this.tournament);
   topics: Topic[] = [];
   selectTopic: Topic[] = [];
+  startDate: Date | undefined;
+  conclusionDate: Date | undefined;
   //arrayAux!: number[];
   isCreateTournament: boolean = false;
 
@@ -118,6 +129,13 @@ export default class EditTournamentDialog extends Vue {
   }
 
   async saveTournament() {
+    this.editTournament.startDate = moment(String(this.startDate)).format(
+      'YYYY-MM-DD hh:mm'
+    );
+    this.editTournament.conclusionDate = moment(
+      String(this.conclusionDate)
+    ).format('YYYY-MM-DD hh:mm');
+
     if (
       this.editTournament &&
       (!this.editTournament.startDate ||
@@ -154,8 +172,8 @@ export default class EditTournamentDialog extends Vue {
     console.log(topic);
   }
 
-  addTopic(topic: Topic) {
-    console.log(topic);
+  addTopic(start: String) {
+    console.log(start);
   }
 }
 </script>

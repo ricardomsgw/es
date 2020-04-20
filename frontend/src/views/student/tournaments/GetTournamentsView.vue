@@ -30,10 +30,14 @@ import Course from '@/models/user/Course';
 import RemoteServices from '@/services/RemoteServices';
 //import EditCourseDialog from '@/views/admin/Courses/EditCourseDialog.vue';
 import Tournament from '@/models/tournaments/Tournament';
+import Topic from '@/models/management/Topic';
 
 @Component
 export default class GetTournamentsView extends Vue {
+  topics: Topic[] = [];
+  topicsAuxiliar: number | undefined;
   tournaments: Tournament[] = [];
+  tournamentsAuxiliar: Tournament[] = [];
   courseExecutionId: number | undefined;
   //editCourseDialog: boolean = false;
   search: string = '';
@@ -58,7 +62,7 @@ export default class GetTournamentsView extends Vue {
     },
     {
       text: 'Topics',
-      value: 'topics',
+      value: 'topicsAux',
       align: 'center',
       width: '20%'
     },
@@ -74,7 +78,16 @@ export default class GetTournamentsView extends Vue {
   async created() {
     await this.$store.dispatch('loading');
     try {
-      this.tournaments = await RemoteServices.getTournaments();
+      this.tournamentsAuxiliar = await RemoteServices.getTournaments();
+      this.topics = await RemoteServices.getTopics();
+      this.topicsAuxiliar = this.tournamentsAuxiliar[0].topics[0];
+      for (var i = 0; i <= this.tournamentsAuxiliar[0].topics.length; i++) {
+        this.topics = this.topics.filter(
+                element => element.id != this.tournamentsAuxiliar[0].topics[i]
+        );
+      }
+      this.tournamentsAuxiliar[0].topicsAux = this.topics;
+      this.tournaments = this.tournamentsAuxiliar;
     } catch (error) {
       await this.$store.dispatch('error', error);
     }

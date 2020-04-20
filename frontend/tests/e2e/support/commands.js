@@ -30,26 +30,6 @@ Cypress.Commands.add('demoAdminLogin', () => {
   cy.contains('Administration').click();
   cy.contains('Manage Courses').click();
 });
-
-Cypress.Commands.add('demoAdminStudent', () => {
-  cy.visit('/')
-  cy.get('[data-cy="studentButton"]').click()
-  cy.get('[data-cy="Tournaments"]').click()
-  cy.get('[data-cy="MyTournaments"]').click()
-});
-
-Cypress.Commands.add('createTournament', (startDate, conclusionDate, numberOfQuestions) => {
-  cy.get('[data-cy="createTournamentButton"]').click();
-  cy.get('[data-cy="StartDate"]').type(startDate);
-  cy.get('[data-cy="ConclusionDate"]').type(conclusionDate);
-  cy.get('[data-cy="NumberOfQuestions"]').type(numberOfQuestions);
-  cy.get('[data-cy="Topics"]').click();
-  cy.contains('Architectural Style').click();
-  cy.contains('Amazon Silk').click();
-  cy.get('[data-cy="saveButton"]').click();
-    //faltasaveButton
-});
-
 Cypress.Commands.add('createCourseExecution', (name, acronym, academicTerm) => {
   cy.get('[data-cy="createButton"]').click();
   cy.get('[data-cy="Name"]').type(name);

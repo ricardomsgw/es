@@ -9,6 +9,7 @@ export default class Tournament {
   conclusionDate: string | undefined;
   numberOfQuestions: number | undefined;
   topics: number[] = [];
+  topicsAux: Topic[] = [];
 
   constructor(jsonObj?: Tournament) {
     if (jsonObj) {
