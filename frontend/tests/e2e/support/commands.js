@@ -83,6 +83,12 @@ Cypress.Commands.add('createTournamentFailed', (numberOfQuestions) => {
   cy.get('[data-cy="saveButton"]').click();
 });
 
+Cypress.Commands.add('getOpenedTournaments',() => {
+  cy.contains('Tournaments').click();
+  cy.contains('Opened tournaments').click();
+  cy.contains('Tournaments').click();
+});
+
 Cypress.Commands.add('createCourseExecution', (name, acronym, academicTerm) => {
   cy.get('[data-cy="createButton"]').click();
   cy.get('[data-cy="Name"]').type(name);
