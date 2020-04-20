@@ -20,6 +20,21 @@
           <v-spacer />
         </v-card-title>
       </template>
+
+      <template v-slot:item.action="{ item }">
+        <v-tooltip bottom>
+          <template v-slot:activator="{ on }">
+            <v-icon
+              small
+              class="mr-2"
+              v-on="on"
+              @click="addUser(item)"
+              data-cy="joinTournament"
+            >fas fa-arrow-right</v-icon>
+          </template>
+          <span>Join Tournament</span>
+        </v-tooltip>
+      </template>
     </v-data-table>
   </v-card>
 </template>
@@ -72,6 +87,13 @@ export default class GetTournamentsView extends Vue {
       align: 'center',
       sortable: false,
       width: '10%'
+    },
+    {
+      text: 'Actions',
+      value: 'action',
+      align: 'center',
+      sortable: false,
+      width: '5%'
     }
   ];
 
@@ -92,6 +114,15 @@ export default class GetTournamentsView extends Vue {
       await this.$store.dispatch('error', error);
     }
     await this.$store.dispatch('clearLoading');
+  }
+  async addUser(tournament: Tournament) {
+    if (confirm('Are you sure you want to join this tournament?')) {
+      try {
+        await RemoteServices.addUser(tournament.id);
+      } catch (error) {
+        await this.$store.dispatch('error', error);
+      }
+    }
   }
 }
 </script>

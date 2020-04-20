@@ -6,6 +6,7 @@ interface CourseMap {
 
 export default class User {
   name!: string;
+  id: number | undefined;
   username!: string;
   role!: string;
   courses: CourseMap = {};
@@ -16,6 +17,7 @@ export default class User {
       this.name = jsonObj.name;
       this.username = jsonObj.username;
       this.role = jsonObj.role;
+      this.id = jsonObj.id;
 
       for (let [name, courses] of Object.entries(jsonObj.courses)) {
         this.courses[name] = courses.map(course => new Course(course));
