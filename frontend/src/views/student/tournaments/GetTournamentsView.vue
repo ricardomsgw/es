@@ -20,6 +20,7 @@
           <v-spacer />
         </v-card-title>
       </template>
+
       <template v-slot:item.action="{ item }">
         <v-tooltip bottom>
           <template v-slot:activator="{ on }">
@@ -29,7 +30,7 @@
               v-on="on"
               @click="addUser(item)"
               data-cy="joinTournament"
-            >delete</v-icon>
+            >fas fa-arrow-right</v-icon>
           </template>
           <span>Join Tournament</span>
         </v-tooltip>
@@ -115,6 +116,13 @@ export default class GetTournamentsView extends Vue {
     await this.$store.dispatch('clearLoading');
   }
   async addUser(tournament: Tournament) {
+    if (confirm('Are you sure you want to join this tournament?')) {
+      try {
+        await RemoteServices.addUser(tournament.id);
+      } catch (error) {
+        await this.$store.dispatch('error', error);
+      }
+    }
   }
 }
 </script>

@@ -558,6 +558,18 @@ export default class RemoteServices {
         throw Error(await this.errorMessage(error));
       });
   }
+  static async addUser(tournamentId: number | undefined): Promise<Tournament> {
+    return httpClient
+      .put(`/tournaments/${tournamentId}`, Store.getters.getUser.id.toString())
+      .then(response => {
+        console.log(Store.getters.getUser.username);
+        return new Tournament(response.data);
+      })
+      .catch(async error => {
+        console.log(Store.getters.getUser.id);
+        throw Error(await this.errorMessage(error));
+      });
+  }
   static async createCourse(course: Course): Promise<Course> {
     return httpClient
       .post('/admin/courses/executions', course)
