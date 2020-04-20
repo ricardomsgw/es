@@ -13,5 +13,8 @@ describe('Create Tournament', () => {
     cy.addUser(5);
 
     cy.closeErrorMessage();
+    cy.exec('PGPASSWORD=123456 psql -d tutordb -U ricardo -h localhost -c "DELETE FROM USERS_TOURNAMENTS WHERE USER_ID=676;\n' +
+        'DELETE FROM TOURNAMENTS_USERS WHERE USERS_ID=676;\n' +
+        'DELETE FROM TOURNAMENTS WHERE STATUS=\'OPENED\';" ');
   });
 });
