@@ -82,6 +82,18 @@ Cypress.Commands.add('createTournamentFailed', (numberOfQuestions) => {
   cy.get('[data-cy="NumberOfQuestions"]').type(numberOfQuestions);
   cy.get('[data-cy="saveButton"]').click();
 });
+Cypress.Commands.add('addUser', (numberOfQuestions) => {
+  cy.get('[data-cy="Tournaments"]').click()
+  cy.get('[data-cy="OpenedTournaments"]').click();
+  cy.contains(numberOfQuestions)
+      .parent()
+      .should('have.length', 1)
+      .children()
+      .should('have.length', 6)
+      .find('[data-cy="joinTournament"]')
+      .click();
+
+});
 
 Cypress.Commands.add('createCourseExecution', (name, acronym, academicTerm) => {
   cy.get('[data-cy="createButton"]').click();
