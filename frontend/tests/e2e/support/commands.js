@@ -95,6 +95,12 @@ Cypress.Commands.add('addUser', (numberOfQuestions) => {
 
 });
 
+Cypress.Commands.add('getOpenedTournaments',() => {
+  cy.contains('Tournaments').click();
+  cy.contains('Opened tournaments').click();
+  cy.contains('Tournaments').click();
+});
+
 Cypress.Commands.add('createCourseExecution', (name, acronym, academicTerm) => {
   cy.get('[data-cy="createButton"]').click();
   cy.get('[data-cy="Name"]').type(name);
