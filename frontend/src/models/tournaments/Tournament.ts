@@ -5,7 +5,7 @@ export default class Tournament {
   id: number | undefined;
   courseExecutionId: number = 11;
   status: string = 'CREATED';
-  startDate: string | undefined;
+  startDate!: string | undefined;
   conclusionDate: string | undefined;
   numberOfQuestions: number | undefined;
   topics: number[] = [];

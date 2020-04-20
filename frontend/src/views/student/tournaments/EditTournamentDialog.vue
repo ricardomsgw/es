@@ -23,7 +23,7 @@
                 format="yyyy-MM-dd HH:mm"
                 date-format="yyyy-MM-dd"
                 time-format="HH:mm"
-                v-model="startDate"
+                v-model="editTournament.startDate"
               >
               </v-datetime-picker>
             </v-flex>
@@ -34,7 +34,8 @@
                 format="yyyy-MM-dd HH:mm"
                 date-format="yyyy-MM-dd"
                 time-format="HH:mm"
-                v-model="conclusionDate"
+                return-object
+                v-model="editTournament.conclusionDate"
               >
               </v-datetime-picker>
             </v-flex>
@@ -54,7 +55,6 @@
                 data-cy="Topics"
                 return-object
                 v-model="selectTopic"
-                @change="saveTopics()"
               >
                 <template v-slot:selection="data">
                   <v-chip
@@ -102,12 +102,14 @@ import Course from '@/models/user/Course';
 import Tournament from '@/models/tournaments/Tournament';
 import Topic from '@/models/management/Topic';
 import moment from 'moment';
+import { Quiz } from '@/models/management/Quiz';
 
 @Component
 export default class EditTournamentDialog extends Vue {
   @Model('dialog', Boolean) dialog!: boolean;
   //@Prop({ type: Array, required: true }) readonly topics!: Topic[];
   @Prop({ type: Tournament, required: true }) readonly tournament!: Tournament;
+  //@Prop(Tournament) readonly editTournament!: Tournament;
 
   editTournament: Tournament = new Tournament(this.tournament);
   topics: Topic[] = [];
@@ -116,6 +118,8 @@ export default class EditTournamentDialog extends Vue {
   conclusionDate: Date | undefined;
   //arrayAux!: number[];
   isCreateTournament: boolean = false;
+  startDateAux: string | undefined;
+  conclusionDateAux: string | undefined;
 
   async created() {
     await this.$store.dispatch('loading');
@@ -129,13 +133,14 @@ export default class EditTournamentDialog extends Vue {
   }
 
   async saveTournament() {
-    this.editTournament.startDate = moment(String(this.startDate)).format(
+    this.startDateAux = moment(String(this.editTournament.startDate)).format(
       'YYYY-MM-DD hh:mm'
     );
-    this.editTournament.conclusionDate = moment(
-      String(this.conclusionDate)
+    this.editTournament.startDate = this.startDateAux;
+    this.conclusionDateAux = moment(
+      String(this.editTournament.conclusionDate)
     ).format('YYYY-MM-DD hh:mm');
-
+    this.editTournament.conclusionDate = this.conclusionDateAux;
     if (
       this.editTournament &&
       (!this.editTournament.startDate ||
@@ -163,17 +168,6 @@ export default class EditTournamentDialog extends Vue {
         await this.$store.dispatch('error', error);
       }
     }
-  }
-  saveTopics() {
-    console.log(this.selectTopic[0].id);
-  }
-
-  removeTopic(topic: Topic) {
-    console.log(topic);
-  }
-
-  addTopic(start: String) {
-    console.log(start);
   }
 }
 </script>

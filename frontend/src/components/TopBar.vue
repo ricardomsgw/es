@@ -155,22 +155,14 @@
             </v-btn>
           </template>
           <v-list dense>
-            <v-list-item to="/student/createTournaments">
-              <v-list-item-action>
-                <v-icon>create</v-icon>
-              </v-list-item-action>
-              <v-list-item-content>
-                <v-list-item-title data-cy="MyTournaments">My tournaments</v-list-item-title>
-              </v-list-item-content>
-            </v-list-item>
-          </v-list>
-          <v-list dense>
-            <v-list-item to="/student/getTournaments">
+            <v-list-item to="/student/manageTournaments">
               <v-list-item-action>
                 <v-icon>fa fa-search</v-icon>
               </v-list-item-action>
               <v-list-item-content>
-                <v-list-item-title data-cy="OpenedTournaments">Opened tournaments</v-list-item-title>
+                <v-list-item-title data-cy="ManageTournaments"
+                  >Manage tournaments</v-list-item-title
+                >
               </v-list-item-content>
             </v-list-item>
           </v-list>
