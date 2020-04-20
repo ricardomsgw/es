@@ -84,7 +84,7 @@ Cypress.Commands.add('createTournamentFailed', (numberOfQuestions) => {
 });
 Cypress.Commands.add('addUser', (numberOfQuestions) => {
   cy.get('[data-cy="Tournaments"]').click()
-  cy.get('[data-cy="OpenedTournaments"]').click();
+  cy.get('[data-cy="ManageTournaments"]').click();
   cy.contains(numberOfQuestions)
       .parent()
       .should('have.length', 1)
