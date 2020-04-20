@@ -146,12 +146,40 @@
             </v-list-item>
           </v-list>
         </v-menu>
+        <!-- Tournament Group-->
+        <v-menu offset-y v-if="isStudent && currentCourse" open-on-hover>
+          <template v-slot:activator="{ on }">
+            <v-btn v-on="on" text dark data-cy="Tournaments">
+              Tournaments
+              <v-icon>fas fa-trophy</v-icon>
+            </v-btn>
+          </template>
+          <v-list dense>
+            <v-list-item to="/student/createTournaments">
+              <v-list-item-action>
+                <v-icon>create</v-icon>
+              </v-list-item-action>
+              <v-list-item-content>
+                <v-list-item-title data-cy="MyTournaments">My tournaments</v-list-item-title>
+              </v-list-item-content>
+            </v-list-item>
+          </v-list>
+          <v-list dense>
+            <v-list-item to="/student/getTournaments">
+              <v-list-item-action>
+                <v-icon>fa fa-search</v-icon>
+              </v-list-item-action>
+              <v-list-item-content>
+                <v-list-item-title data-cy="OpenedTournaments">Opened tournaments</v-list-item-title>
+              </v-list-item-content>
+            </v-list-item>
+          </v-list>
+        </v-menu>
 
         <v-btn to="/student/stats" v-if="isStudent && currentCourse" text dark>
           Stats
           <v-icon>fas fa-user</v-icon>
         </v-btn>
-
         <v-btn
           v-if="isLoggedIn && moreThanOneCourse"
           to="/courses"
@@ -163,7 +191,7 @@
           <v-icon>fa fa-book</v-icon>
         </v-btn>
 
-        <v-btn v-if="isLoggedIn" @click="logout" text dark>
+        <v-btn v-if="isLoggedIn" @click="logout" data-cy="logout" text dark>
           Logout
           <v-icon>fas fa-sign-out-alt</v-icon>
         </v-btn>
@@ -320,7 +348,7 @@
           </v-list-item-action>
           <v-list-item-content>Change course</v-list-item-content>
         </v-list-item>
-        <v-list-item @click="logout" v-if="isLoggedIn">
+        <v-list-item @click="logout" data-cy="logout1" v-if="isLoggedIn">
           <v-list-item-action>
             <v-icon>fas fa-sign-out-alt</v-icon>
           </v-list-item-action>
