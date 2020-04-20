@@ -12,15 +12,30 @@
       <template v-slot:top>
         <v-card-title>
           <v-text-field
+            data-cy="searchButton"
             v-model="search"
             append-icon="search"
             label="Search"
             class="mx-2"
           />
-          <v-spacer />
+          <v-spacer /><v-spacer /><v-spacer /><v-spacer />
+          <v-btn
+            color="primary"
+            dark
+            @click="newTournament"
+            data-cy="createTournamentButton"
+            >New Tournament</v-btn
+          >
         </v-card-title>
       </template>
     </v-data-table>
+    <edit-tournament-dialog
+      v-if="currentTournament"
+      v-model="editTournamentDialog"
+      :tournament="currentTournament"
+      v-on:new-tournament="onCreateTournament"
+      v-on:close-dialog="onCloseDialog"
+    />
   </v-card>
 </template>
 
@@ -31,11 +46,18 @@ import RemoteServices from '@/services/RemoteServices';
 //import EditCourseDialog from '@/views/admin/Courses/EditCourseDialog.vue';
 import Tournament from '@/models/tournaments/Tournament';
 import Topic from '@/models/management/Topic';
+import EditTournamentDialog from '@/views/student/tournaments/EditTournamentDialog.vue';
 
-@Component
+@Component({
+  components: {
+    'edit-tournament-dialog': EditTournamentDialog
+  }
+})
 export default class GetTournamentsView extends Vue {
   topics: Topic[] = [];
   topicsAuxiliar: number | undefined;
+  currentTournament: Tournament | null = null;
+  editTournamentDialog: boolean = false;
   tournaments: Tournament[] = [];
   tournamentsAuxiliar: Tournament[] = [];
   courseExecutionId: number | undefined;
@@ -78,20 +100,27 @@ export default class GetTournamentsView extends Vue {
   async created() {
     await this.$store.dispatch('loading');
     try {
-      this.tournamentsAuxiliar = await RemoteServices.getTournaments();
-      this.topics = await RemoteServices.getTopics();
-      this.topicsAuxiliar = this.tournamentsAuxiliar[0].topics[0];
-      for (var i = 0; i <= this.tournamentsAuxiliar[0].topics.length; i++) {
-        this.topics = this.topics.filter(
-                element => element.id != this.tournamentsAuxiliar[0].topics[i]
-        );
-      }
-      this.tournamentsAuxiliar[0].topicsAux = this.topics;
-      this.tournaments = this.tournamentsAuxiliar;
+      this.tournaments = await RemoteServices.getTournaments();
     } catch (error) {
       await this.$store.dispatch('error', error);
     }
     await this.$store.dispatch('clearLoading');
+  }
+
+  async newTournament() {
+    this.currentTournament = new Tournament();
+    this.editTournamentDialog = true;
+  }
+
+  async onCreateTournament(tournament: Tournament) {
+    this.tournaments.unshift(tournament);
+    this.editTournamentDialog = false;
+    this.currentTournament = null;
+  }
+
+  async onCloseDialog() {
+    this.editTournamentDialog = false;
+    this.currentTournament = null;
   }
 }
 </script>

@@ -39,7 +39,7 @@ Cypress.Commands.add('demoAdminStudent', () => {
 });
 
 Cypress.Commands.add('createTournament', (numberOfQuestions) => {
-  cy.get('[data-cy="MyTournaments"]').click();
+  cy.contains('Manage tournaments').click();
   cy.get('[data-cy="createTournamentButton"]').click();
   cy.get('.layout > :nth-child(1) > .v-input').click();
   cy.get('.v-date-picker-title__year').click();
@@ -63,7 +63,7 @@ Cypress.Commands.add('createTournament', (numberOfQuestions) => {
 });
 
 Cypress.Commands.add('createTournamentFailed', (numberOfQuestions) => {
-  cy.get('[data-cy="MyTournaments"]').click();
+  cy.contains('Manage tournaments').click();
   cy.get('[data-cy="createTournamentButton"]').click();
   cy.get('.layout > :nth-child(1) > .v-input').click();
   cy.get('.v-date-picker-title__year').click();
@@ -85,8 +85,9 @@ Cypress.Commands.add('createTournamentFailed', (numberOfQuestions) => {
 
 Cypress.Commands.add('getOpenedTournaments',() => {
   cy.contains('Tournaments').click();
-  cy.contains('Opened tournaments').click();
+  cy.contains('Manage tournaments').click();
   cy.contains('Tournaments').click();
+  cy.wait(2000);
 });
 
 Cypress.Commands.add('createCourseExecution', (name, acronym, academicTerm) => {
