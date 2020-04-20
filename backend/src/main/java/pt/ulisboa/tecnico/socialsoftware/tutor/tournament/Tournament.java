@@ -19,7 +19,7 @@ import static pt.ulisboa.tecnico.socialsoftware.tutor.exceptions.ErrorMessage.CO
 @Table(name = "tournaments")
 public class Tournament {
 
-    public enum Status {CREATED, OPENED, CLOSED, CANCELED}
+    public enum Status {CREATED, OPENED, CLOSED, CANCELED, STARTED}
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -61,7 +61,7 @@ public class Tournament {
         this.numberOfQuestions = numberOfQuestions;
         this.startDate = startDate;
         this.conclusionDate = conclusionDate;
-        this.status = Status.CREATED;
+        this.status = Status.OPENED;
         this.topics = topics;
 
     }

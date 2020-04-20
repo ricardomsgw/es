@@ -3,6 +3,7 @@ import Store from '@/store';
 import Question from '@/models/management/Question';
 import { Quiz } from '@/models/management/Quiz';
 import Course from '@/models/user/Course';
+import Tournament from '@/models/tournaments/Tournament';
 import StatementCorrectAnswer from '@/models/statement/StatementCorrectAnswer';
 import StudentStats from '@/models/statement/StudentStats';
 import StatementQuiz from '@/models/statement/StatementQuiz';
@@ -533,7 +534,42 @@ export default class RemoteServices {
         throw Error(await this.errorMessage(error));
       });
   }
-
+  static async getTournaments(): Promise<Tournament[]> {
+    return httpClient
+      .get(
+        `/admin/courses/executions/${Store.getters.getCurrentCourse.courseExecutionId}`
+      )
+      .then(response => {
+        return response.data.map((tournament: any) => {
+          return new Tournament(tournament);
+        });
+      })
+      .catch(async error => {
+        throw Error(await this.errorMessage(error));
+      });
+  }
+  static async createTournament(tournament: Tournament): Promise<Tournament> {
+    return httpClient
+      .post('/tournaments', tournament)
+      .then(response => {
+        return new Tournament(response.data);
+      })
+      .catch(async error => {
+        throw Error(await this.errorMessage(error));
+      });
+  }
+  static async addUser(tournamentId: number | undefined): Promise<Tournament> {
+    return httpClient
+      .put(`/tournaments/${tournamentId}`, Store.getters.getUser.id.toString())
+      .then(response => {
+        console.log(Store.getters.getUser.username);
+        return new Tournament(response.data);
+      })
+      .catch(async error => {
+        console.log(Store.getters.getUser.id);
+        throw Error(await this.errorMessage(error));
+      });
+  }
   static async createCourse(course: Course): Promise<Course> {
     return httpClient
       .post('/admin/courses/executions', course)
