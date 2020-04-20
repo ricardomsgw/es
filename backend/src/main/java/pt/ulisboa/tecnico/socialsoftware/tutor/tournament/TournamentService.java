@@ -70,7 +70,7 @@ public class TournamentService {
         Integer numberOfQuestions = tournamentDto.getNumberOfQuestions();
         Integer id = tournamentDto.getId();
         tournament = new Tournament(numberOfQuestions, startDate, conclusionDate, topics);
-        tournament.setStatus(Tournament.Status.CREATED);
+        tournament.setStatus(Tournament.Status.OPENED);
         tournament.setCourseExecution(courseExecution);
         tournament.setCurrentDate(currentDate);
         tournament.setConclusionDate(conclusionDate);
