@@ -40,6 +40,7 @@ Cypress.Commands.add('demoAdminStudent', () => {
 
 Cypress.Commands.add('createTournament', (numberOfQuestions) => {
   cy.contains('Manage tournaments').click();
+  cy.wait(1000);
   cy.get('[data-cy="createTournamentButton"]').click();
   cy.get('.layout > :nth-child(1) > .v-input').click();
   cy.get('.v-date-picker-title__year').click();
@@ -64,6 +65,7 @@ Cypress.Commands.add('createTournament', (numberOfQuestions) => {
 
 Cypress.Commands.add('createTournamentFailed', (numberOfQuestions) => {
   cy.contains('Manage tournaments').click();
+  cy.wait(1000);
   cy.get('[data-cy="createTournamentButton"]').click();
   cy.get('.layout > :nth-child(1) > .v-input').click();
   cy.get('.v-date-picker-title__year').click();
