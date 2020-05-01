@@ -177,6 +177,7 @@ let router = new Router({
           }
         },
         {
+          // manage-tournaments (no camelCase)
           path: 'manageTournaments',
           name: 'manage-tournaments',
           component: GetTournamentsView,

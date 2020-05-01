@@ -60,14 +60,14 @@ class CreateTournamentServiceSpockPerformanceTest extends Specification {
 
         topics.add(topic)
         and: "a 1000 course executions"
-        1.upto(1000, {
+        1.upto(1, {
             def result = tournamentRepository.save(new Tournament(NUMBER_OF_QUESTIONS, startDate, conclusionDate, topics))
             tournamentRepository.findById(result.getId()).get().setStatus(Tournament.Status.OPENED)
         })
 
 
         when:
-        1.upto(10000, { tournamentService.getTournaments(courseExecutionId)})
+        1.upto(1, { tournamentService.getTournaments(courseExecutionId)})
 
         then:
         true

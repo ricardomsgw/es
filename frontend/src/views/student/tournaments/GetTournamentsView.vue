@@ -69,6 +69,7 @@ import EditTournamentDialog from '@/views/student/tournaments/EditTournamentDial
   }
 })
 export default class GetTournamentsView extends Vue {
+  // topics are not showing for my created tournament
   topics: Topic[] = [];
   topicsAuxiliar: number | undefined;
   currentTournament: Tournament | null = null;

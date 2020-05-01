@@ -132,6 +132,8 @@ export default class EditTournamentDialog extends Vue {
     await this.$store.dispatch('clearLoading');
   }
 
+  // this is over complicted, you don't need these aux variables, you can insert the values in the form
+  // directly in the tournament object (respective atttribute)
   async saveTournament() {
     this.startDateAux = moment(String(this.editTournament.startDate)).format(
       'YYYY-MM-DD hh:mm'

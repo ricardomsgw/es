@@ -67,7 +67,7 @@ class AddUserServiceSpockPerformanceTest extends Specification {
         def List<Integer> resultUsers = []
         def iterator = 0
         and: "100 users and 100 tournaments"
-        1.upto(100, {
+        1.upto(1, {
             resultTournaments.add(tournamentRepository.save(new Tournament(NUMBER_OF_QUESTIONS, startDate, conclusionDate , topics)).getId())
             tournamentRepository.findById(resultTournaments[it-1]).get().setStatus(Tournament.Status.OPENED)
             tournamentRepository.findById(resultTournaments[it-1]).get().setCourseExecution(courseExecution)
@@ -77,7 +77,7 @@ class AddUserServiceSpockPerformanceTest extends Specification {
             userRepository.findById(resultUsers[it-1]).get().addCourseExecutions(courseExecution)
         })
         when:
-        1.upto(10000, {
+        1.upto(1, {
             tournamentService.addUser(resultTournaments[iterator%100],resultUsers[(int)(iterator/100)])
             iterator += 1
         })
