@@ -10,6 +10,7 @@ export default class Tournament {
   numberOfQuestions: number | undefined;
   topics: number[] = [];
   topicsAux: Topic[] = [];
+  creatorId: number | undefined;
 
   constructor(jsonObj?: Tournament) {
     if (jsonObj) {
@@ -21,6 +22,7 @@ export default class Tournament {
       this.status = jsonObj.status;
       this.numberOfQuestions = jsonObj.numberOfQuestions;
       this.topics = jsonObj.topics;
+      this.creatorId = jsonObj.creatorId;
     }
   }
 }

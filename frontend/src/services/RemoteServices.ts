@@ -570,6 +570,11 @@ export default class RemoteServices {
         throw Error(await this.errorMessage(error));
       });
   }
+
+  static async obtainUser(): Promise<number> {
+    return Store.getters.getUser.id;
+  }
+
   static async createExternalCourse(course: Course): Promise<Course> {
     return httpClient
       .post('/courses/external', course)

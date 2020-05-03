@@ -31,6 +31,9 @@ public class Tournament {
     @Column(name = "number_of_questions")
     private Integer numberOfQuestions;
 
+    @Column(name = "creator_tournament")
+    private Integer creator_tournament;
+
     @Column(name = "start_date")
     private LocalDateTime startDate;
 
@@ -54,7 +57,7 @@ public class Tournament {
 
     public Tournament() {}
 
-    public Tournament(Integer numberOfQuestions, LocalDateTime startDate, LocalDateTime conclusionDate, Set<Topic> topics) {
+    public Tournament(Integer numberOfQuestions, LocalDateTime startDate, LocalDateTime conclusionDate, Set<Topic> topics, User creator) {
 
         this.currentDate = LocalDateTime.now();
         checkInputs(numberOfQuestions, startDate, conclusionDate, topics);
@@ -63,6 +66,7 @@ public class Tournament {
         this.conclusionDate = conclusionDate;
         this.status = Status.OPENED;
         this.topics = topics;
+        this.creator_tournament = creator.getId();
 
     }
 
@@ -117,6 +121,10 @@ public class Tournament {
     public void setId(Integer id) {
         this.id = id;
     }
+
+    public Integer getCreator_tournament() {return creator_tournament; }
+
+    public void setCreator_tournament(Integer creator_tournament) { this.creator_tournament = creator_tournament; }
 
     public Integer getNumberOfQuestions() { return numberOfQuestions; }
 
@@ -215,4 +223,10 @@ public class Tournament {
         if (this.getUsers().contains(user))
             throw new TutorException(TOURNAMENT_ALREADY_JOINED);
     }
+
+    public void cancel() {
+        courseExecution.getTournaments().remove(this);
+        courseExecution = null;
+    }
+
 }
