@@ -138,18 +138,13 @@ public class TournamentService {
     }
 
     @Transactional(isolation = Isolation.REPEATABLE_READ)
-    public void cancelTournament(int userId, int tournamentId) {
+    public void cancelTournament(int tournamentId) {
         Tournament tournament = tournamentRepository.findById(tournamentId).orElseThrow(() ->new TutorException(TOURNAMENT_NOT_FOUND, tournamentId));
-        User user = userRepository.findById(userId).orElseThrow(() ->new TutorException(USER_NOT_FOUND, userId));
-        if ((int)user.getId() == (int)tournament.getCreator_tournament()) {
-            tournament.cancel();
-            tournamentRepository.delete(tournament);
-        }
-        else {
-            System.out.println(user.getId());
-            System.out.println(tournament.getCreator_tournament());
-            throw new TutorException(USER_NOT_CREATOR);
-        }
+        //User user = userRepository.findById(userId).orElseThrow(() ->new TutorException(USER_NOT_FOUND, userId));
+
+        tournament.cancel();
+        tournamentRepository.delete(tournament);
+
     }
 
 }

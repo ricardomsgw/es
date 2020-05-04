@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios, { AxiosRequestConfig } from 'axios';
 import Store from '@/store';
 import Question from '@/models/management/Question';
 import { Quiz } from '@/models/management/Quiz';
@@ -570,6 +570,18 @@ export default class RemoteServices {
         throw Error(await this.errorMessage(error));
       });
   }
+
+  static async cancelTournament(tournamentId: number | undefined) {
+
+    return httpClient
+      .delete(
+        `/tournaments/${tournamentId}`
+      )
+      .catch(async error => {
+        throw Error(await this.errorMessage(error));
+      });
+  }
+
 
   static async obtainUser(): Promise<number> {
     return Store.getters.getUser.id;

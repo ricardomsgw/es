@@ -77,10 +77,9 @@ public class TournamentController {
 
     @DeleteMapping("/tournaments/{tournamentId}")
     @PreAuthorize("hasRole('ROLE_STUDENT')")
-    public ResponseEntity cancelTournament(@PathVariable Integer tournamentId, @Valid @RequestBody String userDto) {
-        tournamentService.cancelTournament(Integer.parseInt(userDto.trim()), tournamentId);
+    public void cancelTournament(@PathVariable Integer tournamentId) {
+        tournamentService.cancelTournament(tournamentId);
 
-        return ResponseEntity.ok().build();
     }
 
 }

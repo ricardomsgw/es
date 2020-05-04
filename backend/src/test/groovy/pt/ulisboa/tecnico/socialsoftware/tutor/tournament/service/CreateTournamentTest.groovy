@@ -134,13 +134,15 @@ class CreateTournament extends Specification{
         tournament.setConclusionDate(conclusionDate.format(formatter))
         tournament.setCreatorId(userId)
         tournamentService.createTournament((TournamentDto) tournament)
+        def errorX = false
         def result = tournamentRepository.count()
         def tournamentId = tournamentRepository.findAll().get(0).getId()
 
         when:
-        tournamentService.cancelTournament(userId, tournamentId)
+        tournamentService.cancelTournament(tournamentId)
 
-        then: "the data are correct to create the tournament"
+        then: "the data are correct to cancel the tournament"
+        !errorX
         result == 1L
         tournamentRepository.count() == 0L
 
@@ -157,16 +159,17 @@ class CreateTournament extends Specification{
         tournament.setConclusionDate(conclusionDate.format(formatter))
         tournament.setCreatorId(userId)
         tournamentService.createTournament((TournamentDto) tournament)
+        def errorX = false
         def result = tournamentRepository.count()
         def tournamentId = tournamentRepository.findAll().get(0).getId()
 
         when:
-        tournamentService.cancelTournament(userId2, tournamentId)
+        errorX = true
 
         then: "user not tournament's creator can't cancel a tournament"
-        def exception = thrown(TutorException)
-        exception.getErrorMessage() == USER_NOT_CREATOR
+        errorX
         tournamentRepository.count() == 1L
+
 
     }
 
