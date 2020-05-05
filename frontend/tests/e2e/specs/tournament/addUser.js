@@ -1,4 +1,5 @@
-ndescribe('Create Tournament', () => {
+describe('Add User', () => {
+
   beforeEach(() => {
     cy.demoAdminStudent();
   });
