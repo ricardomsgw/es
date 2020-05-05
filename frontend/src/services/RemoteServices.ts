@@ -548,6 +548,20 @@ export default class RemoteServices {
         throw Error(await this.errorMessage(error));
       });
   }
+
+  static async getJoinedTournaments(): Promise<Tournament[]> {
+    return httpClient
+      .get('/tournaments', Store.getters.getUser.id.toString())
+      .then(response => {
+        return response.data.map((tournament: any) => {
+          return new Tournament(tournament);
+        });
+      })
+      .catch(async error => {
+        console.log(Store.getters.getUser.id.toString());
+        throw Error(await this.errorMessage(error));
+      });
+  }
   static async createTournament(tournament: Tournament): Promise<Tournament> {
     return httpClient
       .post('/tournaments', tournament)
