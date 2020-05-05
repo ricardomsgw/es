@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios, { AxiosRequestConfig } from 'axios';
 import Store from '@/store';
 import Question from '@/models/management/Question';
 import { Quiz } from '@/models/management/Quiz';
@@ -511,24 +511,24 @@ export default class RemoteServices {
       });
   }
 
-  static async activateCourse(course: Course): Promise<Course> {
+  static getCourses(): Promise<Course[]> {
     return httpClient
-      .post('/courses', course)
+      .get('/courses/executions')
       .then(response => {
-        return new Course(response.data);
+        return response.data.map((course: any) => {
+          return new Course(course);
+        });
       })
       .catch(async error => {
         throw Error(await this.errorMessage(error));
       });
   }
 
-  static async getCourses(): Promise<Course[]> {
+  static async activateCourse(course: Course): Promise<Course> {
     return httpClient
-      .get('/admin/courses/executions')
+      .post('/courses/activate', course)
       .then(response => {
-        return response.data.map((course: any) => {
-          return new Course(course);
-        });
+        return new Course(response.data);
       })
       .catch(async error => {
         throw Error(await this.errorMessage(error));
@@ -570,9 +570,26 @@ export default class RemoteServices {
         throw Error(await this.errorMessage(error));
       });
   }
-  static async createCourse(course: Course): Promise<Course> {
+
+  static async cancelTournament(tournamentId: number | undefined) {
+
     return httpClient
-      .post('/admin/courses/executions', course)
+      .delete(
+        `/tournaments/${tournamentId}`
+      )
+      .catch(async error => {
+        throw Error(await this.errorMessage(error));
+      });
+  }
+
+
+  static async obtainUser(): Promise<number> {
+    return Store.getters.getUser.id;
+  }
+
+  static async createExternalCourse(course: Course): Promise<Course> {
+    return httpClient
+      .post('/courses/external', course)
       .then(response => {
         return new Course(response.data);
       })
@@ -583,7 +600,7 @@ export default class RemoteServices {
 
   static async deleteCourse(courseExecutionId: number | undefined) {
     return httpClient
-      .delete('/admin/courses/executions/' + courseExecutionId)
+      .delete(`/executions/${courseExecutionId}`)
       .catch(async error => {
         throw Error(await this.errorMessage(error));
       });

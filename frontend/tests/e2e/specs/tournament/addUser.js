@@ -1,4 +1,5 @@
 describe('Add User', () => {
+
   beforeEach(() => {
     cy.demoAdminStudent();
   });

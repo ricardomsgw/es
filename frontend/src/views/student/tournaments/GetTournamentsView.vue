@@ -38,9 +38,23 @@
               v-on="on"
               @click="addUser(item)"
               data-cy="joinTournament"
-            >fas fa-arrow-right</v-icon>
+              >fas fa-arrow-right</v-icon
+            >
           </template>
           <span>Join Tournament</span>
+        </v-tooltip>
+        <v-tooltip bottom>
+          <template v-slot:activator="{ on }">
+            <v-icon
+              small
+              class="mr-2"
+              v-on="on"
+              @click="cancelTournament(item)"
+              data-cy="cancelTournament"
+              >cancel</v-icon
+            >
+          </template>
+          <span>Cancel Tournament</span>
         </v-tooltip>
       </template>
     </v-data-table>
@@ -149,6 +163,27 @@ export default class GetTournamentsView extends Vue {
     if (confirm('Are you sure you want to join this tournament?')) {
       try {
         await RemoteServices.addUser(tournament.id);
+      } catch (error) {
+        await this.$store.dispatch('error', error);
+      }
+    }
+  }
+
+  async cancelTournament(tournamentToCancel: Tournament) {
+    if (confirm('Are you sure you want to cancel this tournament?')) {
+      try {
+        let userId = await RemoteServices.obtainUser();
+        if (userId == tournamentToCancel.creatorId) {
+          await RemoteServices.cancelTournament(tournamentToCancel.id);
+          this.tournaments = this.tournaments.filter(
+            tournament => tournament.id != tournamentToCancel.id
+          );
+        } else {
+          await this.$store.dispatch(
+            'error',
+            'Tournaments only can be canceled by its creator'
+          );
+        }
       } catch (error) {
         await this.$store.dispatch('error', error);
       }

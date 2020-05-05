@@ -3,9 +3,9 @@ package pt.ulisboa.tecnico.socialsoftware.tutor.tournament;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import pt.ulisboa.tecnico.socialsoftware.tutor.administration.AdministrationService;
 import pt.ulisboa.tecnico.socialsoftware.tutor.course.Course;
 import pt.ulisboa.tecnico.socialsoftware.tutor.course.CourseDto;
 import pt.ulisboa.tecnico.socialsoftware.tutor.course.CourseExecution;
@@ -73,6 +73,13 @@ public class TournamentController {
     @PreAuthorize("hasRole('ROLE_STUDENT')")
     public  List<TournamentDto> getTournaments(@PathVariable Integer courseExecutionId){
         return this.tournamentService.getTournaments(courseExecutionId);
+    }
+
+    @DeleteMapping("/tournaments/{tournamentId}")
+    @PreAuthorize("hasRole('ROLE_STUDENT')")
+    public void cancelTournament(@PathVariable Integer tournamentId) {
+        tournamentService.cancelTournament(tournamentId);
+
     }
 
 }

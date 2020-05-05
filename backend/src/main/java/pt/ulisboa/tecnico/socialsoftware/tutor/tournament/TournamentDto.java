@@ -18,6 +18,7 @@ import java.util.stream.Collectors;
 public class TournamentDto implements Serializable {
 
     private Integer tournamentId;
+    private Integer creatorId;
     private int numberOfQuestions;
     private List<Integer> topics = new ArrayList<>();
     private List<Integer> users = new ArrayList<>();
@@ -34,6 +35,7 @@ public class TournamentDto implements Serializable {
 
     public TournamentDto(Tournament tournament){
 
+        this.creatorId = tournament.getCreator_tournament();
         this.currentDate = LocalDateTime.now().format(formatter);
         this.tournamentId = tournament.getId();
         this.status = tournament.getStatus();
@@ -70,6 +72,14 @@ public class TournamentDto implements Serializable {
 
     public void setId(int tournamentId) {
         this.tournamentId = tournamentId;
+    }
+
+    public int getCreatorId() {
+        return this.creatorId;
+    }
+
+    public void setCreatorId(int creatorId) {
+        this.creatorId = creatorId;
     }
 
     public int getCourseId() {

@@ -24,12 +24,6 @@
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite("visit", (originalFn, url, options) => { ... })
 /// <reference types="Cypress" />
-Cypress.Commands.add('demoAdminLogin', () => {
-  cy.visit('/');
-  cy.get('[data-cy="adminButton"]').click();
-  cy.contains('Administration').click();
-  cy.contains('Manage Courses').click();
-});
 
 Cypress.Commands.add('demoAdminStudent', () => {
   cy.visit('/')
@@ -40,6 +34,7 @@ Cypress.Commands.add('demoAdminStudent', () => {
 
 Cypress.Commands.add('createTournament', (numberOfQuestions) => {
   cy.contains('Manage tournaments').click();
+  cy.wait(1000);
   cy.get('[data-cy="createTournamentButton"]').click();
   cy.get('.layout > :nth-child(1) > .v-input').click();
   cy.get('.v-date-picker-title__year').click();
@@ -64,6 +59,7 @@ Cypress.Commands.add('createTournament', (numberOfQuestions) => {
 
 Cypress.Commands.add('createTournamentFailed', (numberOfQuestions) => {
   cy.contains('Manage tournaments').click();
+  cy.wait(1000);
   cy.get('[data-cy="createTournamentButton"]').click();
   cy.get('.layout > :nth-child(1) > .v-input').click();
   cy.get('.v-date-picker-title__year').click();
@@ -104,9 +100,9 @@ Cypress.Commands.add('getOpenedTournaments',() => {
 
 Cypress.Commands.add('createCourseExecution', (name, acronym, academicTerm) => {
   cy.get('[data-cy="createButton"]').click();
-  cy.get('[data-cy="Name"]').type(name);
-  cy.get('[data-cy="Acronym"]').type(acronym);
-  cy.get('[data-cy="AcademicTerm"]').type(academicTerm);
+  cy.get('[data-cy="courseExecutionNameInput"]').type(name);
+  cy.get('[data-cy="courseExecutionAcronymInput"]').type(acronym);
+  cy.get('[data-cy="courseExecutionAcademicTermInput"]').type(academicTerm);
   cy.get('[data-cy="saveButton"]').click();
 });
 
@@ -137,8 +133,8 @@ Cypress.Commands.add(
       .should('have.length', 7)
       .find('[data-cy="createFromCourse"]')
       .click();
-    cy.get('[data-cy="Acronym"]').type(acronym);
-    cy.get('[data-cy="AcademicTerm"]').type(academicTerm);
+    cy.get('[data-cy="courseExecutionAcronymInput"]').type(acronym);
+    cy.get('[data-cy="courseExecutionAcademicTermInput"]').type(academicTerm);
     cy.get('[data-cy="saveButton"]').click();
   }
 );

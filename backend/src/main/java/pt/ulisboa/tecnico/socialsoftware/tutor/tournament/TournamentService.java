@@ -58,7 +58,8 @@ public class TournamentService {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
         Tournament tournament = null;
         List<Integer> topicsDto = tournamentDto.getTopics();
-
+        int creatorId = tournamentDto.getCreatorId();
+        User userCreator = userRepository.findById(creatorId).orElseThrow(() -> new TutorException(USER_NOT_FOUND, creatorId));
         int courseExecutionId = tournamentDto.getCourseExecutionId();
         CourseExecution courseExecution = courseExecutionRepository.findById(courseExecutionId).orElseThrow(() -> new TutorException(COURSE_EXECUTION_NOT_FOUND, courseExecutionId));
         Course courseAux = courseExecution.getCourse();
@@ -69,7 +70,7 @@ public class TournamentService {
         LocalDateTime currentDate = tournamentDto.getCurrentDateDate();
         Integer numberOfQuestions = tournamentDto.getNumberOfQuestions();
         Integer id = tournamentDto.getId();
-        tournament = new Tournament(numberOfQuestions, startDate, conclusionDate, topics);
+        tournament = new Tournament(numberOfQuestions, startDate, conclusionDate, topics, userCreator);
         tournament.setStatus(Tournament.Status.OPENED);
         tournament.setCourseExecution(courseExecution);
         tournament.setCurrentDate(currentDate);
@@ -134,6 +135,16 @@ public class TournamentService {
         return courseExecution.getOpenedTournaments().stream()
                 .map(TournamentDto::new)
                 .collect(Collectors.toList());
+    }
+
+    @Transactional(isolation = Isolation.REPEATABLE_READ)
+    public void cancelTournament(int tournamentId) {
+        Tournament tournament = tournamentRepository.findById(tournamentId).orElseThrow(() ->new TutorException(TOURNAMENT_NOT_FOUND, tournamentId));
+        //User user = userRepository.findById(userId).orElseThrow(() ->new TutorException(USER_NOT_FOUND, userId));
+
+        tournament.cancel();
+        tournamentRepository.delete(tournament);
+
     }
 
 }
