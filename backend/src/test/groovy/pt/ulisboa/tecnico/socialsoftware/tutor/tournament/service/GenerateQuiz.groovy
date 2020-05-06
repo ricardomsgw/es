@@ -52,6 +52,8 @@ class GenerateQuiz extends Specification {
     TournamentRepository tournamentRepository
 
     def user1
+    def user2
+    def user3
     def creator
     def course
     def courseExecution
@@ -77,6 +79,8 @@ class GenerateQuiz extends Specification {
 
         user1 = new User()
         user1.setKey(1)
+        user1.addCourseExecutions(courseExecution)
+        user1.setRole(User.Role.STUDENT);
         userRepository.save(user1)
 
         creator = new User()
@@ -84,6 +88,18 @@ class GenerateQuiz extends Specification {
         creator.addCourseExecutions(courseExecution)
         creator.setRole(User.Role.STUDENT);
         userRepository.save(creator)
+
+        user2 = new User()
+        user2.setKey(1)
+        user2.addCourseExecutions(courseExecution)
+        user2.setRole(User.Role.STUDENT);
+        userRepository.save(user2)
+
+        user3 = new User()
+        user3.setKey(1)
+        user3.addCourseExecutions(courseExecution)
+        user3.setRole(User.Role.STUDENT);
+        userRepository.save(user3)
 
         tournament = CreateOpenTournament(courseExecution)
         tournamentRepository.save(tournament)
@@ -114,10 +130,35 @@ class GenerateQuiz extends Specification {
     }
 
     def "quiz gets generated when 1 user joins"(){
+        given:
+
+        def tournamentId = tournamentRepository.findAll().get(0).getId()
+        def userId = userRepository.findAll().get(0).getId()
+        when:
+        def result = tournamentService.addUser(userId, tournamentId);
+
+        then:
+        result.getUsers().size() == 2;
+        result.getQuiz() != null;
     }
     def "quiz doesnt exist when no one joins"(){
+        given:
+        def tournamentTest = tournamentRepository.findAll().get(0)
+        then:
+        tournamentTest.getQuiz() == null
     }
     def "quiz is still the same after several people have joined"(){
+        given:
+
+        def tournamentId = tournamentRepository.findAll().get(0).getId()
+        def userId = userRepository.findAll().get(0).getId()
+        when:
+        def result1 = tournamentService.addUser(userRepository.findAll().get(0).getId(), tournamentId);
+        tournamentService.addUser(userRepository.findAll().get(2).getId(), tournamentId);
+        def result = tournamentService.addUser(userRepository.findAll().get(3).getId(), tournamentId);
+        then:
+        result.getQuiz() != null;
+        result.getQuiz() != result1.getQuiz();
     }
     @TestConfiguration
     static class TournamentServiceImplTestContextConfiguration {
