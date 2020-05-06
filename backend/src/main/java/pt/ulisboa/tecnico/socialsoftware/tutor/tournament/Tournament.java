@@ -4,6 +4,7 @@ import pt.ulisboa.tecnico.socialsoftware.tutor.course.Course;
 import pt.ulisboa.tecnico.socialsoftware.tutor.course.CourseExecution;
 import pt.ulisboa.tecnico.socialsoftware.tutor.exceptions.TutorException;
 import pt.ulisboa.tecnico.socialsoftware.tutor.question.domain.Topic;
+import pt.ulisboa.tecnico.socialsoftware.tutor.quiz.domain.Quiz;
 import pt.ulisboa.tecnico.socialsoftware.tutor.user.User;
 import static pt.ulisboa.tecnico.socialsoftware.tutor.exceptions.ErrorMessage.*;
 import javax.persistence.*;
@@ -43,7 +44,6 @@ public class Tournament {
     @Column(name = "conclusion_date")
     private LocalDateTime conclusionDate;
 
-
     @ManyToMany(cascade = CascadeType.ALL, fetch=FetchType.LAZY, mappedBy = "tournaments")
     private Set<Topic> topics = new HashSet<>();
 
@@ -67,6 +67,7 @@ public class Tournament {
         this.status = Status.OPENED;
         this.topics = topics;
         this.creator_tournament = creator.getId();
+        this.users.add(creator);
 
     }
 
