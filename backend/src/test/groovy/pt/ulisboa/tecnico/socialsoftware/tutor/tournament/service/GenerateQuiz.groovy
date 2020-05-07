@@ -10,8 +10,11 @@ import pt.ulisboa.tecnico.socialsoftware.tutor.course.CourseExecutionRepository
 import pt.ulisboa.tecnico.socialsoftware.tutor.course.CourseRepository
 import pt.ulisboa.tecnico.socialsoftware.tutor.exceptions.ErrorMessage
 import pt.ulisboa.tecnico.socialsoftware.tutor.exceptions.TutorException
+import pt.ulisboa.tecnico.socialsoftware.tutor.question.domain.Question
 import pt.ulisboa.tecnico.socialsoftware.tutor.question.domain.Topic
 import pt.ulisboa.tecnico.socialsoftware.tutor.question.dto.TopicDto
+import pt.ulisboa.tecnico.socialsoftware.tutor.question.repository.QuestionRepository
+import pt.ulisboa.tecnico.socialsoftware.tutor.question.repository.TopicRepository
 import pt.ulisboa.tecnico.socialsoftware.tutor.tournament.Tournament
 import pt.ulisboa.tecnico.socialsoftware.tutor.tournament.TournamentRepository
 import pt.ulisboa.tecnico.socialsoftware.tutor.tournament.TournamentService
@@ -51,6 +54,12 @@ class GenerateQuiz extends Specification {
     @Autowired
     TournamentRepository tournamentRepository
 
+    @Autowired
+    TopicRepository topicRepository
+
+    @Autowired
+    QuestionRepository questionRepository
+
     def user1
     def user2
     def user3
@@ -73,9 +82,21 @@ class GenerateQuiz extends Specification {
 
         formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")
 
+
         TopicDto topicDto = new TopicDto();
         topicDto.setName("NEWTOPIC");
         topic = new Topic(course,topicDto);
+
+        topicRepository.save(topic)
+
+        def question = new Question()
+        question.setKey(1)
+        question.setTitle("Question title")
+        question.addTopic(topic);
+        question.setStatus(Question.Status.AVAILABLE)
+        questionRepository.save(question)
+        topic.addQuestion(question)
+        topicRepository.save(topic)
 
         user1 = new User()
         user1.setKey(1)
@@ -90,13 +111,13 @@ class GenerateQuiz extends Specification {
         userRepository.save(creator)
 
         user2 = new User()
-        user2.setKey(1)
+        user2.setKey(3)
         user2.addCourseExecutions(courseExecution)
         user2.setRole(User.Role.STUDENT);
         userRepository.save(user2)
 
         user3 = new User()
-        user3.setKey(1)
+        user3.setKey(4)
         user3.addCourseExecutions(courseExecution)
         user3.setRole(User.Role.STUDENT);
         userRepository.save(user3)
@@ -139,10 +160,10 @@ class GenerateQuiz extends Specification {
 
         then:
         result.getUsers().size() == 2;
-        result.getQuiz() != null;
+        result.getQuizId() != null;
     }
     def "quiz doesnt exist when no one joins"(){
-        given:
+        when:
         def tournamentTest = tournamentRepository.findAll().get(0)
         then:
         tournamentTest.getQuiz() == null
@@ -157,8 +178,8 @@ class GenerateQuiz extends Specification {
         tournamentService.addUser(userRepository.findAll().get(2).getId(), tournamentId);
         def result = tournamentService.addUser(userRepository.findAll().get(3).getId(), tournamentId);
         then:
-        result.getQuiz() != null;
-        result.getQuiz() != result1.getQuiz();
+        result.getQuizId() != null;
+        result.getQuizId() == result1.getQuizId();
     }
     @TestConfiguration
     static class TournamentServiceImplTestContextConfiguration {

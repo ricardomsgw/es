@@ -1,5 +1,4 @@
 package pt.ulisboa.tecnico.socialsoftware.tutor.tournament;
-import org.apache.tomcat.jni.Local;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.retry.annotation.Backoff;
 import org.springframework.retry.annotation.Retryable;
@@ -7,16 +6,17 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 import pt.ulisboa.tecnico.socialsoftware.tutor.course.*;
+import pt.ulisboa.tecnico.socialsoftware.tutor.question.domain.Question;
 import pt.ulisboa.tecnico.socialsoftware.tutor.question.domain.Topic;
 import pt.ulisboa.tecnico.socialsoftware.tutor.question.dto.TopicDto;
 import pt.ulisboa.tecnico.socialsoftware.tutor.question.repository.QuestionRepository;
 import pt.ulisboa.tecnico.socialsoftware.tutor.question.repository.TopicRepository;
+import pt.ulisboa.tecnico.socialsoftware.tutor.quiz.domain.Quiz;
+import pt.ulisboa.tecnico.socialsoftware.tutor.quiz.domain.QuizQuestion;
 import pt.ulisboa.tecnico.socialsoftware.tutor.quiz.dto.QuizDto;
-import pt.ulisboa.tecnico.socialsoftware.tutor.tournament.*;
 import pt.ulisboa.tecnico.socialsoftware.tutor.exceptions.TutorException;
 import pt.ulisboa.tecnico.socialsoftware.tutor.user.User;
 import pt.ulisboa.tecnico.socialsoftware.tutor.user.UserRepository;
-import pt.ulisboa.tecnico.socialsoftware.tutor.user.dto.UserDto;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -25,6 +25,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import static pt.ulisboa.tecnico.socialsoftware.tutor.exceptions.ErrorMessage.*;
 
@@ -39,6 +40,9 @@ public class TournamentService {
 
     @Autowired
     private TournamentRepository tournamentRepository;
+
+    @Autowired
+    private QuestionRepository questionRepository;
 
 
     @Autowired
@@ -111,7 +115,11 @@ public class TournamentService {
 
         User user = userRepository.findById(userId).orElseThrow(() ->new TutorException(USER_NOT_FOUND, userId));
         tournamentRepository.findById(tournamentId).get().addUser(user);
-
+        if(tournament.getQuiz() == null) {
+            if(tournament.getUsers().size() > 1){
+                tournament.setQuiz(generateQuiz(tournament));
+            }
+        }
         entityManager.persist(tournament);
         TournamentDto tournamentDto = new TournamentDto(tournament);
 
@@ -145,6 +153,44 @@ public class TournamentService {
         tournament.cancel();
         tournamentRepository.delete(tournament);
 
+    }
+
+    @Transactional(isolation = Isolation.REPEATABLE_READ)
+    public Quiz generateQuiz(Tournament tournament){
+        Quiz quiz = new Quiz();
+        quiz.setAvailableDate(tournament.getStartDate());
+        quiz.setConclusionDate(tournament.getConclusionDate());
+        quiz.setCreationDate(LocalDateTime.now());
+        quiz.setResultsDate(tournament.getConclusionDate());
+        quiz.setScramble( false );
+        quiz.setQrCodeOnly( false );
+        //quiz.setTimed( true );
+        quiz.setType(Quiz.QuizType.TOURNAMENT.toString());
+        quiz.setOneWay( false );
+        quiz.setTitle("TOURNAMENT_QUIZ");
+
+        ArrayList<Integer> questionsId = new ArrayList<>();
+        ArrayList<Question> questions = new ArrayList<>();
+        for( Topic topic : tournament.getTopics()){
+            questionsId.add(tournamentRepository.getQuestionsByTopic(topic.getId()));
+        }
+        for ( Integer id : questionsId){
+            questions.add(questionRepository.findById(id).orElseThrow(() ->new TutorException(QUESTION_NOT_FOUND, id)));
+        }
+        IntStream.range(0,questions.size())
+                .forEach(index -> new QuizQuestion(quiz, questions.get(index), index));
+        return quiz;
+    }
+
+    public boolean numberOfQuestionsValid(Tournament tournament){
+        ArrayList<Integer> questionsId = new ArrayList<Integer>();
+        for( Topic topic : tournament.getTopics()){
+            questionsId.add(tournamentRepository.getQuestionsByTopic(topic.getId()));
+        }
+        if(questionsId.size() > tournament.getNumberOfQuestions()){
+            return false;
+        }
+        return true;
     }
 
 }

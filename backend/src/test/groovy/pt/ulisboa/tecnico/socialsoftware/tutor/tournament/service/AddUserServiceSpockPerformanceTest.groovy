@@ -9,8 +9,10 @@ import pt.ulisboa.tecnico.socialsoftware.tutor.course.Course
 import pt.ulisboa.tecnico.socialsoftware.tutor.course.CourseExecution
 import pt.ulisboa.tecnico.socialsoftware.tutor.course.CourseExecutionRepository
 import pt.ulisboa.tecnico.socialsoftware.tutor.course.CourseRepository
+import pt.ulisboa.tecnico.socialsoftware.tutor.question.domain.Question
 import pt.ulisboa.tecnico.socialsoftware.tutor.question.domain.Topic
 import pt.ulisboa.tecnico.socialsoftware.tutor.question.dto.TopicDto
+import pt.ulisboa.tecnico.socialsoftware.tutor.question.repository.QuestionRepository
 import pt.ulisboa.tecnico.socialsoftware.tutor.question.repository.TopicRepository
 import pt.ulisboa.tecnico.socialsoftware.tutor.tournament.Tournament
 import pt.ulisboa.tecnico.socialsoftware.tutor.tournament.TournamentRepository
@@ -45,6 +47,9 @@ class AddUserServiceSpockPerformanceTest extends Specification {
     CourseExecutionRepository courseExecutionRepository
 
     @Autowired
+    QuestionRepository questionRepository
+
+    @Autowired
     UserRepository userRepository;
 
     def currentDate = LocalDateTime.now()
@@ -54,10 +59,18 @@ class AddUserServiceSpockPerformanceTest extends Specification {
     def "performance testing to get 1000 addUsers"() {
         given: "a tournament and a user"
         def course = new Course(COURSE, Course.Type.TECNICO)
-        def topicDto = new TopicDto()
+        TopicDto topicDto = new TopicDto();
         topicDto.setName("NEWTOPIC");
-        def topic = new Topic(course, topicDto)
+        def topic = new Topic(course,topicDto);
+
         topicRepository.save(topic)
+
+        def question = new Question()
+        question.setKey(1)
+        question.setTitle("Question title")
+        question.addTopic(topic);
+        question.setStatus(Question.Status.AVAILABLE)
+        questionRepository.save(question)
         courseRepository.save(course)
         def courseExecution = new CourseExecution(course, ACRONYM, ACADEMIC_TERM, Course.Type.TECNICO)
         courseExecutionRepository.save(courseExecution)

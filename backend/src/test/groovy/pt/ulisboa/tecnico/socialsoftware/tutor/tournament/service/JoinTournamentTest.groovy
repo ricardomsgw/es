@@ -10,8 +10,11 @@ import pt.ulisboa.tecnico.socialsoftware.tutor.course.CourseExecutionRepository
 import pt.ulisboa.tecnico.socialsoftware.tutor.course.CourseRepository
 import pt.ulisboa.tecnico.socialsoftware.tutor.exceptions.ErrorMessage
 import pt.ulisboa.tecnico.socialsoftware.tutor.exceptions.TutorException
+import pt.ulisboa.tecnico.socialsoftware.tutor.question.domain.Question
 import pt.ulisboa.tecnico.socialsoftware.tutor.question.domain.Topic
 import pt.ulisboa.tecnico.socialsoftware.tutor.question.dto.TopicDto
+import pt.ulisboa.tecnico.socialsoftware.tutor.question.repository.QuestionRepository
+import pt.ulisboa.tecnico.socialsoftware.tutor.question.repository.TopicRepository
 import pt.ulisboa.tecnico.socialsoftware.tutor.user.User
 import pt.ulisboa.tecnico.socialsoftware.tutor.user.UserRepository
 import spock.lang.Specification
@@ -47,6 +50,12 @@ class JoinTournamentTest extends Specification {
     @Autowired
     TournamentRepository tournamentRepository
 
+    @Autowired
+    TopicRepository topicRepository
+
+    @Autowired
+    QuestionRepository questionRepository
+
     def user1
     def user2
     def course
@@ -70,6 +79,17 @@ class JoinTournamentTest extends Specification {
         TopicDto topicDto = new TopicDto();
         topicDto.setName("NEWTOPIC");
         topic = new Topic(course,topicDto);
+
+        topicRepository.save(topic)
+
+        def question = new Question()
+        question.setKey(1)
+        question.setTitle("Question title")
+        question.addTopic(topic);
+        question.setStatus(Question.Status.AVAILABLE)
+        questionRepository.save(question)
+        topic.addQuestion(question)
+        topicRepository.save(topic)
 
         user1 = new User()
         user1.setKey(1)
