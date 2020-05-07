@@ -15,4 +15,6 @@ import java.util.Optional;
 @Repository
 @Transactional
 public interface TournamentRepository extends JpaRepository<Tournament, Integer>{
+    @Query(value = "select t.questions_id from topics_questions t,questions q WHERE t.topics_id = :topicid AND  q.status= 'AVAILABLE'", nativeQuery = true)
+    Integer getQuestionsByTopic(int topicid);
 }

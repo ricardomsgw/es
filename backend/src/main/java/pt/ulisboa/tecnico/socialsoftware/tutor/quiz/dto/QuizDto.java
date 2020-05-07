@@ -40,7 +40,7 @@ public class QuizDto implements Serializable {
         this.qrCodeOnly = quiz.isQrCodeOnly();
         this.oneWay = quiz.isOneWay();
         this.title = quiz.getTitle();
-        this.timed = quiz.getType().equals(Quiz.QuizType.IN_CLASS);
+        this.timed = quiz.getType().equals(Quiz.QuizType.IN_CLASS) || quiz.getType().equals(Quiz.QuizType.TOURNAMENT);
         this.type = quiz.getType().toString();
         this.series = quiz.getSeries();
         this.version = quiz.getVersion();
