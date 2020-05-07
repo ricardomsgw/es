@@ -12,6 +12,7 @@ import pt.ulisboa.tecnico.socialsoftware.tutor.question.dto.TopicDto;
 import pt.ulisboa.tecnico.socialsoftware.tutor.question.repository.QuestionRepository;
 import pt.ulisboa.tecnico.socialsoftware.tutor.question.repository.TopicRepository;
 import pt.ulisboa.tecnico.socialsoftware.tutor.quiz.dto.QuizDto;
+import pt.ulisboa.tecnico.socialsoftware.tutor.statement.dto.SolvedQuizDto;
 import pt.ulisboa.tecnico.socialsoftware.tutor.tournament.*;
 import pt.ulisboa.tecnico.socialsoftware.tutor.exceptions.TutorException;
 import pt.ulisboa.tecnico.socialsoftware.tutor.user.User;
@@ -145,6 +146,15 @@ public class TournamentService {
         tournament.cancel();
         tournamentRepository.delete(tournament);
 
+    }
+
+    @Transactional(isolation = Isolation.REPEATABLE_READ)
+    public List<TournamentDto> getJoinedTournaments(int userId) {
+        User user = userRepository.findById(userId).orElseThrow(() -> new TutorException(USER_NOT_FOUND, userId));
+
+        return user.getTournaments().stream()
+                .map(TournamentDto::new)
+                .collect(Collectors.toList());
     }
 
 }
