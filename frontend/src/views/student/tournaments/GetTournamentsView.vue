@@ -38,10 +38,23 @@
               v-on="on"
               @click="addUser(item)"
               data-cy="joinTournament"
-              >fas fa-arrow-right</v-icon
+              >fas fa-plus-square</v-icon
             >
           </template>
           <span>Join Tournament</span>
+        </v-tooltip>
+        <v-tooltip bottom>
+          <template  v-slot:activator="{ on }">
+              <v-icon
+                      small
+                      class="mr-2"
+                      v-on="on"
+                      @click="startQuiz(item)"
+                      data-cy="startQuiz"
+              >fas fa-chevron-circle-right</v-icon
+              >
+          </template>
+          <span>Start Quiz</span>
         </v-tooltip>
         <v-tooltip bottom>
           <template v-slot:activator="{ on }">
@@ -159,6 +172,14 @@ export default class GetTournamentsView extends Vue {
     this.currentTournament = null;
   }
 
+  async startQuiz(tournament: Tournament){
+    try{
+      await RemoteServices.startTournamentQuiz(tournament);
+    } catch(error){
+      await this.$store.dispatch('error', error);
+    }
+    return true;
+  }
   async addUser(tournament: Tournament) {
     if (confirm('Are you sure you want to join this tournament?')) {
       try {
@@ -168,6 +189,7 @@ export default class GetTournamentsView extends Vue {
       }
     }
   }
+
 
   async cancelTournament(tournamentToCancel: Tournament) {
     if (confirm('Are you sure you want to cancel this tournament?')) {

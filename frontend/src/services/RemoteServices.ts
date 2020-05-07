@@ -572,6 +572,9 @@ export default class RemoteServices {
         throw Error(await this.errorMessage(error));
       });
   }
+  static async startTournamentQuiz(tournament: Tournament){
+
+  }
   static async addUser(tournamentId: number | undefined): Promise<Tournament> {
     return httpClient
       .put(`/tournaments/${tournamentId}`, Store.getters.getUser.id.toString())
