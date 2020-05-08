@@ -1,9 +1,9 @@
 describe('Create Tournament', () => {
   beforeEach(() => {
-    cy.demoAdminStudent();
+    cy.demoStudent();
   });
   afterEach(() => {
-    cy.get('[data-cy="logout"]').click()
+    cy.get('[data-cy="logoutButton"]').click()
   });
 
   it('login creates a tournament', () => {

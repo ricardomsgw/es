@@ -25,6 +25,7 @@ import AssessmentsView from '@/views/teacher/assessments/AssessmentsView.vue';
 import CreateQuizzesView from '@/views/student/CreateQuizzesView.vue';
 import CoursesView from '@/views/admin/Courses/CoursesView.vue';
 import GetTournamentsView from '@/views/student/tournaments/GetTournamentsView.vue';
+import MyDashboardView from '@/views/student/tournaments/MyDashboardView.vue';
 
 Vue.use(Router);
 
@@ -182,6 +183,15 @@ let router = new Router({
           component: GetTournamentsView,
           meta: {
             title: process.env.VUE_APP_NAME + ' - Manage Tournaments',
+            requiredAuth: 'Student'
+          }
+        },
+        {
+          path: 'myDashboard',
+          name: 'myDashboard',
+          component: MyDashboardView,
+          meta: {
+            title: process.env.VUE_APP_NAME + ' - My dashboard',
             requiredAuth: 'Student'
           }
         },

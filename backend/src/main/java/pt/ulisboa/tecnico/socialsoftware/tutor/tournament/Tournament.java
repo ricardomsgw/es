@@ -4,6 +4,8 @@ import pt.ulisboa.tecnico.socialsoftware.tutor.course.Course;
 import pt.ulisboa.tecnico.socialsoftware.tutor.course.CourseExecution;
 import pt.ulisboa.tecnico.socialsoftware.tutor.exceptions.TutorException;
 import pt.ulisboa.tecnico.socialsoftware.tutor.question.domain.Topic;
+import pt.ulisboa.tecnico.socialsoftware.tutor.quiz.domain.Quiz;
+import pt.ulisboa.tecnico.socialsoftware.tutor.quiz.dto.QuizDto;
 import pt.ulisboa.tecnico.socialsoftware.tutor.user.User;
 import static pt.ulisboa.tecnico.socialsoftware.tutor.exceptions.ErrorMessage.*;
 import javax.persistence.*;
@@ -31,6 +33,9 @@ public class Tournament {
     @Column(name = "number_of_questions")
     private Integer numberOfQuestions;
 
+    @Column(name = "creator_tournament")
+    private Integer creator_tournament;
+
     @Column(name = "start_date")
     private LocalDateTime startDate;
 
@@ -40,11 +45,14 @@ public class Tournament {
     @Column(name = "conclusion_date")
     private LocalDateTime conclusionDate;
 
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name="quiz_id", referencedColumnName = "id")
+    private Quiz quiz;
 
     @ManyToMany(cascade = CascadeType.ALL, fetch=FetchType.LAZY, mappedBy = "tournaments")
     private Set<Topic> topics = new HashSet<>();
 
-    @ManyToMany(cascade = CascadeType.ALL, fetch=FetchType.LAZY)
+    @ManyToMany(fetch=FetchType.LAZY)
     private Set<User> users = new HashSet<>();
 
 
@@ -54,7 +62,7 @@ public class Tournament {
 
     public Tournament() {}
 
-    public Tournament(Integer numberOfQuestions, LocalDateTime startDate, LocalDateTime conclusionDate, Set<Topic> topics) {
+    public Tournament(Integer numberOfQuestions, LocalDateTime startDate, LocalDateTime conclusionDate, Set<Topic> topics, User creator) {
 
         this.currentDate = LocalDateTime.now();
         checkInputs(numberOfQuestions, startDate, conclusionDate, topics);
@@ -63,7 +71,8 @@ public class Tournament {
         this.conclusionDate = conclusionDate;
         this.status = Status.OPENED;
         this.topics = topics;
-
+        this.creator_tournament = creator.getId();
+        this.users.add(creator);
     }
 
     private void checkInputs(Integer numberOfQuestions, LocalDateTime startDate, LocalDateTime conclusionDate, Set<Topic> topics) {
@@ -117,6 +126,10 @@ public class Tournament {
     public void setId(Integer id) {
         this.id = id;
     }
+
+    public Integer getCreator_tournament() {return creator_tournament; }
+
+    public void setCreator_tournament(Integer creator_tournament) { this.creator_tournament = creator_tournament; }
 
     public Integer getNumberOfQuestions() { return numberOfQuestions; }
 
@@ -200,6 +213,12 @@ public class Tournament {
         checkToAddUser(user);
         users.add(user);
         user.addTournaments(this);
+        if(this.quiz != null) {
+            return;
+        }
+        else if( this.users.size() > 1 ){
+            generateQuiz();
+        }
     }
 
 
@@ -215,4 +234,18 @@ public class Tournament {
         if (this.getUsers().contains(user))
             throw new TutorException(TOURNAMENT_ALREADY_JOINED);
     }
+
+    public Quiz getQuiz() { return quiz; }
+
+    public void setQuiz(Quiz quiz) { this.quiz = quiz; }
+
+    public void cancel() {
+        courseExecution.getTournaments().remove(this);
+        courseExecution = null;
+    }
+
+    public void generateQuiz(){
+
+    }
+
 }

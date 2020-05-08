@@ -17,27 +17,22 @@
         <v-container grid-list-md fluid>
           <v-layout column wrap>
             <v-flex xs24 sm12 md8>
-              <v-datetime-picker
+              <VueCtkDateTimePicker
                 data-cy="StartDate"
-                label="Start Date"
-                format="yyyy-MM-dd HH:mm"
-                date-format="yyyy-MM-dd"
-                time-format="HH:mm"
+                label="*Start Date"
+                id="startDateInput"
                 v-model="editTournament.startDate"
-              >
-              </v-datetime-picker>
+                format="YYYY-MM-DDTHH:mm:ssZ"
+              ></VueCtkDateTimePicker>
             </v-flex>
             <v-flex xs24 sm12 md8>
-              <v-datetime-picker
+              <VueCtkDateTimePicker
                 data-cy="ConclusionDate"
-                label="Conclusion Date"
-                format="yyyy-MM-dd HH:mm"
-                date-format="yyyy-MM-dd"
-                time-format="HH:mm"
-                return-object
+                label="*Conclusion Date"
+                id="conclusionDateInput"
                 v-model="editTournament.conclusionDate"
-              >
-              </v-datetime-picker>
+                format="YYYY-MM-DDTHH:mm:ssZ"
+              ></VueCtkDateTimePicker>
             </v-flex>
             <v-flex xs24 sm12 md8>
               <v-text-field
@@ -103,6 +98,7 @@ import Tournament from '@/models/tournaments/Tournament';
 import Topic from '@/models/management/Topic';
 import moment from 'moment';
 import { Quiz } from '@/models/management/Quiz';
+import Store from '@/store';
 
 @Component
 export default class EditTournamentDialog extends Vue {
@@ -133,6 +129,11 @@ export default class EditTournamentDialog extends Vue {
   }
 
   async saveTournament() {
+    try {
+      this.editTournament.creatorId = await RemoteServices.obtainUser();
+    } catch (error) {
+      await this.$store.dispatch('error', error);
+    }
     this.startDateAux = moment(String(this.editTournament.startDate)).format(
       'YYYY-MM-DD hh:mm'
     );

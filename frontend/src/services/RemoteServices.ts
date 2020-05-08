@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios, { AxiosRequestConfig } from 'axios';
 import Store from '@/store';
 import Question from '@/models/management/Question';
 import { Quiz } from '@/models/management/Quiz';
@@ -548,6 +548,20 @@ export default class RemoteServices {
         throw Error(await this.errorMessage(error));
       });
   }
+
+  static async getJoinedTournaments(): Promise<Tournament[]> {
+    return httpClient
+      .get('/tournaments', Store.getters.getUser.id.toString())
+      .then(response => {
+        return response.data.map((tournament: any) => {
+          return new Tournament(tournament);
+        });
+      })
+      .catch(async error => {
+        console.log(Store.getters.getUser.id.toString());
+        throw Error(await this.errorMessage(error));
+      });
+  }
   static async createTournament(tournament: Tournament): Promise<Tournament> {
     return httpClient
       .post('/tournaments', tournament)
@@ -570,6 +584,23 @@ export default class RemoteServices {
         throw Error(await this.errorMessage(error));
       });
   }
+
+  static async cancelTournament(tournamentId: number | undefined) {
+
+    return httpClient
+      .delete(
+        `/tournaments/${tournamentId}`
+      )
+      .catch(async error => {
+        throw Error(await this.errorMessage(error));
+      });
+  }
+
+
+  static async obtainUser(): Promise<number> {
+    return Store.getters.getUser.id;
+  }
+
   static async createExternalCourse(course: Course): Promise<Course> {
     return httpClient
       .post('/courses/external', course)

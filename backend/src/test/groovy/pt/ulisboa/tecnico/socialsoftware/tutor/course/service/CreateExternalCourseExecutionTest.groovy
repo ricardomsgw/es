@@ -29,7 +29,7 @@ class CreateExternalCourseExecutionTest extends Specification {
     def adminService
     
     def setup (){
-        adminService = new AdministrationService()
+        //adminService = new AdministrationService()
     }
 
     def "the tecnico course exists and create execution course"() {
