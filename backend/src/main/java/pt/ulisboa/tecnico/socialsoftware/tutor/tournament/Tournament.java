@@ -52,7 +52,7 @@ public class Tournament {
     @ManyToMany(cascade = CascadeType.ALL, fetch=FetchType.LAZY, mappedBy = "tournaments")
     private Set<Topic> topics = new HashSet<>();
 
-    @ManyToMany(cascade = CascadeType.ALL, fetch=FetchType.LAZY)
+    @ManyToMany(fetch=FetchType.LAZY)
     private Set<User> users = new HashSet<>();
 
 
