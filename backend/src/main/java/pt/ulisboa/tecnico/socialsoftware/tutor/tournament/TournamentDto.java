@@ -27,6 +27,7 @@ public class TournamentDto implements Serializable {
     private String conclusionDate = null;
     private Tournament.Status status;
     private int courseExecutionId;
+    private int quizId;
 
     @Transient
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
@@ -143,6 +144,10 @@ public class TournamentDto implements Serializable {
     public void setCourseExecutionId(int courseExecutionId) {
         this.courseExecutionId = courseExecutionId;
     }
+
+    public int getQuizId() { return quizId; }
+
+    public void setQuizId(int quizId) { this.quizId = quizId; }
 
     public LocalDateTime getStartDateDate() {
         if (getStartDate() == null || getStartDate().isEmpty()) {
