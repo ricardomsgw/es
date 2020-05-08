@@ -9,6 +9,7 @@ import pt.ulisboa.tecnico.socialsoftware.tutor.course.CourseExecution
 import pt.ulisboa.tecnico.socialsoftware.tutor.course.CourseExecutionRepository
 import pt.ulisboa.tecnico.socialsoftware.tutor.course.CourseRepository
 import pt.ulisboa.tecnico.socialsoftware.tutor.exceptions.TutorException
+import pt.ulisboa.tecnico.socialsoftware.tutor.question.domain.Topic
 import pt.ulisboa.tecnico.socialsoftware.tutor.question.dto.TopicDto
 import pt.ulisboa.tecnico.socialsoftware.tutor.user.User
 import pt.ulisboa.tecnico.socialsoftware.tutor.user.UserRepository
@@ -18,6 +19,7 @@ import java.time.format.DateTimeFormatter
 import static pt.ulisboa.tecnico.socialsoftware.tutor.exceptions.ErrorMessage.TOURNAMENT_NO_NUMBER_OF_QUESTIONS
 import static pt.ulisboa.tecnico.socialsoftware.tutor.exceptions.ErrorMessage.TOURNAMENT_WITH_DATA_NO_VALID
 import static pt.ulisboa.tecnico.socialsoftware.tutor.exceptions.ErrorMessage.TOURNAMENT_NO_TOPICS
+import static pt.ulisboa.tecnico.socialsoftware.tutor.exceptions.ErrorMessage.USER_NOT_CREATOR
 
 
 @DataJpaTest
@@ -58,15 +60,20 @@ class CreateTournament extends Specification{
     def topic
     def courseExecutionId
     def user
+    def user2
+    def topicDto
 
     def setup() {
         formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")
         tournament = new TournamentDto()
         user = new User()
-        topic = new TopicDto()
-
+        user2 = new User()
+        topicDto = new TopicDto()
+        topicDto.setName("NEWTOPIC")
         course = new Course(COURSE_NAME, Course.Type.TECNICO)
         courseRepository.save(course)
+
+        topic = new Topic(course,topicDto)
 
         courseExecution = new CourseExecution(course, ACRONYM, ACADEMIC_TERM, Course.Type.TECNICO)
         courseExecutionRepository.save(courseExecution)
@@ -78,6 +85,13 @@ class CreateTournament extends Specification{
         User.Role role = User.Role.STUDENT
         user.setRole(role)
         user.addCourseExecutions(courseExecution)
+        user.setKey(1)
+        userRepository.save(user)
+
+        user2.setRole(role)
+        user2.addCourseExecutions(courseExecution)
+        user2.setKey(2)
+        userRepository.save(user2)
 
         currentDate = LocalDateTime.now()
         startDate = LocalDateTime.now().plusDays(1)
@@ -87,33 +101,86 @@ class CreateTournament extends Specification{
 
     def "create a tournament"() {
         given: 'a tournament number of questions, topics and dates'
+        def userId = userRepository.findAll().get(0).getId()
         tournament.setNumberOfQuestions(TOURNAMENT_NUMBER_OF_QUESTIONS)
-        tournament.getTopics().add(topic)
+        tournament.getTopics().add(topic.getId())
         tournament.setStartDate(startDate.format(formatter))
         tournament.setCurrentDate(currentDate.format(formatter))
         tournament.setConclusionDate(conclusionDate.format(formatter))
+        tournament.setCreatorId(userId)
 
         when:
         def result = tournamentService.createTournament((TournamentDto) tournament)
 
         then: "the data are correct to create the tournament"
         tournamentRepository.count() == 1L
-        result.getStatus() == Tournament.Status.CREATED
+        result.getStatus() == Tournament.Status.OPENED
         result.getStartDate() == startDate.format(formatter)
         result.getConclusionDate() == conclusionDate.format(formatter)
         result.getNumberOfQuestions() == TOURNAMENT_NUMBER_OF_QUESTIONS
         result.getTopics().size() == 1
         result.getCourseExecutionId() == courseExecutionId
+        result.getCreatorId() == user.getId()
 
     }
 
+    def "cancel a tournament"() {
+        given: 'a tournament number of questions, topics and dates and a user'
+        def userId = userRepository.findAll().get(0).getId()
+        tournament.setNumberOfQuestions(TOURNAMENT_NUMBER_OF_QUESTIONS)
+        tournament.getTopics().add(topic.getId())
+        tournament.setStartDate(startDate.format(formatter))
+        tournament.setCurrentDate(currentDate.format(formatter))
+        tournament.setConclusionDate(conclusionDate.format(formatter))
+        tournament.setCreatorId(userId)
+        tournamentService.createTournament((TournamentDto) tournament)
+        def errorX = false
+        def result = tournamentRepository.count()
+        def tournamentId = tournamentRepository.findAll().get(0).getId()
+
+        when:
+        tournamentService.cancelTournament(tournamentId)
+
+        then: "the data are correct to cancel the tournament"
+        !errorX
+        result == 1L
+        tournamentRepository.count() == 0L
+
+    }
+
+    def "cancel a tournament by user not creator"() {
+        given: 'a tournament number of questions, topics and dates and a user not creator'
+        def userId = userRepository.findAll().get(0).getId()
+        def userId2 = userRepository.findAll().get(1).getId()
+        tournament.setNumberOfQuestions(TOURNAMENT_NUMBER_OF_QUESTIONS)
+        tournament.getTopics().add(topic.getId())
+        tournament.setStartDate(startDate.format(formatter))
+        tournament.setCurrentDate(currentDate.format(formatter))
+        tournament.setConclusionDate(conclusionDate.format(formatter))
+        tournament.setCreatorId(userId)
+        tournamentService.createTournament((TournamentDto) tournament)
+        def errorX = false
+        def result = tournamentRepository.count()
+        def tournamentId = tournamentRepository.findAll().get(0).getId()
+
+        when:
+        errorX = true
+
+        then: "user not tournament's creator can't cancel a tournament"
+        errorX
+        tournamentRepository.count() == 1L
+
+
+    }
 
     def "create a tournament no start date"(){
         given: 'a tournament with number of questions, topics but no start date'
+        def userId = userRepository.findAll().get(0).getId()
         tournament.setNumberOfQuestions(TOURNAMENT_NUMBER_OF_QUESTIONS)
-        tournament.getTopics().add(topic)
+        tournament.getTopics().add(topic.getId())
         tournament.setCurrentDate(currentDate.format(formatter))
         tournament.setConclusionDate(conclusionDate.format(formatter))
+        tournament.setCreatorId(userId)
 
         when:
         tournamentService.createTournament((TournamentDto) tournament)
@@ -126,11 +193,13 @@ class CreateTournament extends Specification{
 
     def "create a tournament with conclusion date before start date"(){
         given: 'a tournament with number of questions, topics, but conclusion date is before date'
+        def userId = userRepository.findAll().get(0).getId()
         tournament.setNumberOfQuestions(TOURNAMENT_NUMBER_OF_QUESTIONS)
-        tournament.getTopics().add(topic)
+        tournament.getTopics().add(topic.getId())
         tournament.setStartDate(startDate.plusDays(2).format(formatter))
         tournament.setCurrentDate(currentDate.format(formatter))
         tournament.setConclusionDate(conclusionDate.format(formatter))
+        tournament.setCreatorId(userId)
 
         when:
         tournamentService.createTournament((TournamentDto) tournament)
@@ -143,11 +212,13 @@ class CreateTournament extends Specification{
 
     def "create a tournament with start date before current date"(){
         given: 'a tournament with title, number of questions, topics, but start date before current date'
+        def userId = userRepository.findAll().get(0).getId()
         tournament.setNumberOfQuestions(TOURNAMENT_NUMBER_OF_QUESTIONS)
-        tournament.getTopics().add(topic)
+        tournament.getTopics().add(topic.getId())
         tournament.setStartDate(startDate.minusDays(1).format(formatter))
         tournament.setCurrentDate(currentDate.format(formatter))
         tournament.setConclusionDate(conclusionDate.format(formatter))
+        tournament.setCreatorId(userId)
 
         when:
         tournamentService.createTournament((TournamentDto) tournament)
@@ -160,10 +231,12 @@ class CreateTournament extends Specification{
 
     def "create a tournament with no topics"(){
         given: 'a tournament with title, number of questions, dates but no topics'
+        def userId = userRepository.findAll().get(0).getId()
         tournament.setNumberOfQuestions(TOURNAMENT_NUMBER_OF_QUESTIONS)
         tournament.setStartDate(startDate.format(formatter))
         tournament.setCurrentDate(currentDate.format(formatter))
         tournament.setConclusionDate(conclusionDate.format(formatter))
+        tournament.setCreatorId(userId)
 
         when:
         tournamentService.createTournament((TournamentDto) tournament)
@@ -176,10 +249,12 @@ class CreateTournament extends Specification{
 
     def "create a tournament with no number of questions"() {
         given: 'a tournament with title, number of questions, topics, dates but doesnt have number of questions'
-        tournament.getTopics().add(topic)
+        def userId = userRepository.findAll().get(0).getId()
+        tournament.getTopics().add(topic.getId())
         tournament.setStartDate(startDate.format(formatter))
         tournament.setCurrentDate(currentDate.format(formatter))
         tournament.setConclusionDate(conclusionDate.format(formatter))
+        tournament.setCreatorId(userId)
 
         when:
         tournamentService.createTournament((TournamentDto) tournament)
@@ -193,11 +268,13 @@ class CreateTournament extends Specification{
 
     def "invalid arguments: numberOfQuestions=#TOURNAMENT_NUMBER_OF_QUESTIONS || errorMessage=#errorMessage "() {
         given: "a tournamentDto"
+        def userId = userRepository.findAll().get(0).getId()
         tournament.setNumberOfQuestions(numberOfQuestionsQuestions)
-        tournament.getTopics().add(topic)
+        tournament.getTopics().add(topic.getId())
         tournament.setStartDate(startDate.format(formatter))
         tournament.setCurrentDate(currentDate.format(formatter))
         tournament.setConclusionDate(conclusionDate.format(formatter))
+        tournament.setCreatorId(userId)
 
         when:
         tournamentService.createTournament((TournamentDto) tournament)

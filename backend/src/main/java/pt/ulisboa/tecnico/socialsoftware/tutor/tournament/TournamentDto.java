@@ -18,6 +18,7 @@ import java.util.stream.Collectors;
 public class TournamentDto implements Serializable {
 
     private Integer tournamentId;
+    private Integer creatorId;
     private int numberOfQuestions;
     private List<Integer> topics = new ArrayList<>();
     private List<Integer> users = new ArrayList<>();
@@ -26,6 +27,7 @@ public class TournamentDto implements Serializable {
     private String conclusionDate = null;
     private Tournament.Status status;
     private int courseExecutionId;
+    private int quizId;
 
     @Transient
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
@@ -34,6 +36,7 @@ public class TournamentDto implements Serializable {
 
     public TournamentDto(Tournament tournament){
 
+        this.creatorId = tournament.getCreator_tournament();
         this.currentDate = LocalDateTime.now().format(formatter);
         this.tournamentId = tournament.getId();
         this.status = tournament.getStatus();
@@ -70,6 +73,14 @@ public class TournamentDto implements Serializable {
 
     public void setId(int tournamentId) {
         this.tournamentId = tournamentId;
+    }
+
+    public int getCreatorId() {
+        return this.creatorId;
+    }
+
+    public void setCreatorId(int creatorId) {
+        this.creatorId = creatorId;
     }
 
     public int getCourseId() {
@@ -133,6 +144,10 @@ public class TournamentDto implements Serializable {
     public void setCourseExecutionId(int courseExecutionId) {
         this.courseExecutionId = courseExecutionId;
     }
+
+    public int getQuizId() { return quizId; }
+
+    public void setQuizId(int quizId) { this.quizId = quizId; }
 
     public LocalDateTime getStartDateDate() {
         if (getStartDate() == null || getStartDate().isEmpty()) {
