@@ -572,17 +572,6 @@ export default class RemoteServices {
         throw Error(await this.errorMessage(error));
       });
   }
-  static async startTournamentQuiz(quizId: number, startDate: String, users: number[]){
-    console.log(quizId);
-    console.log(users[1]);
-    console.log(Store.getters.getUser.id);
-    if(users.includes(Store.getters.getUser.id)){
-      //if(startDate < new Date().toLocaleString()){
-        console.log(quizId);
-        await this.startQuiz(quizId);
-      //}
-    }
-  }
   static async addUser(tournamentId: number | undefined): Promise<Tournament> {
     return httpClient
       .put(`/tournaments/${tournamentId}`, Store.getters.getUser.id.toString())

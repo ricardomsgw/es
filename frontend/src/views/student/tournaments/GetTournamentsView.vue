@@ -44,19 +44,6 @@
           <span>Join Tournament</span>
         </v-tooltip>
         <v-tooltip bottom>
-          <template  v-slot:activator="{ on }">
-              <v-icon
-                      small
-                      class="mr-2"
-                      v-on="on"
-                      @click="startQuiz(item)"
-                      data-cy="startQuiz"
-              >fas fa-chevron-circle-right</v-icon
-              >
-          </template>
-          <span>Start Quiz</span>
-        </v-tooltip>
-        <v-tooltip bottom>
           <template v-slot:activator="{ on }">
             <v-icon
               small
@@ -176,21 +163,6 @@ export default class GetTournamentsView extends Vue {
     this.currentTournament = null;
   }
 
-  async startQuiz(tournament: Tournament){
-    try{
-      let userId = await RemoteServices.obtainUser();
-      if(tournament.users.includes(userId)){
-        //if(startDate < new Date().toLocaleString()){
-        console.log(tournament.quizId);
-        await RemoteServices.startQuiz(tournament.quizId);
-        //}
-      }
-
-    } catch(error){
-      await this.$store.dispatch('error', error);
-    }
-    return true;
-  }
   async addUser(tournament: Tournament) {
     if (confirm('Are you sure you want to join this tournament?')) {
       try {
