@@ -89,6 +89,7 @@ import RemoteServices from '@/services/RemoteServices';
 import Tournament from '@/models/tournaments/Tournament';
 import Topic from '@/models/management/Topic';
 import EditTournamentDialog from '@/views/student/tournaments/EditTournamentDialog.vue';
+import Store from "@/store";
 
 @Component({
   components: {
@@ -99,11 +100,14 @@ export default class GetTournamentsView extends Vue {
   topics: Topic[] = [];
   topicsAuxiliar: number | undefined;
   currentTournament: Tournament | null = null;
+  tournamentAux: Tournament = new Tournament();
   editTournamentDialog: boolean = false;
   tournaments: Tournament[] = [];
   tournamentsAuxiliar: Tournament[] = [];
   courseExecutionId: number | undefined;
   //editCourseDialog: boolean = false;
+  aux: Tournament | undefined;
+  i: number | undefined;
   search: string = '';
   headers: object = [
     {
@@ -174,7 +178,14 @@ export default class GetTournamentsView extends Vue {
 
   async startQuiz(tournament: Tournament){
     try{
-      await RemoteServices.startTournamentQuiz(tournament);
+      let userId = await RemoteServices.obtainUser();
+      if(tournament.users.includes(userId)){
+        //if(startDate < new Date().toLocaleString()){
+        console.log(tournament.quizId);
+        await RemoteServices.startQuiz(tournament.quizId);
+        //}
+      }
+
     } catch(error){
       await this.$store.dispatch('error', error);
     }
@@ -183,7 +194,15 @@ export default class GetTournamentsView extends Vue {
   async addUser(tournament: Tournament) {
     if (confirm('Are you sure you want to join this tournament?')) {
       try {
-        await RemoteServices.addUser(tournament.id);
+        this.aux = (await RemoteServices.addUser(tournament.id));
+        for( this.i= 0;this.i<this.tournaments.length ;this.i++){
+          if(this.tournaments[this.i].id = this.aux.id){
+            this.tournaments[this.i].quizId = this.aux.quizId;
+            this.tournaments[this.i].users = this.aux.users;
+          }
+        }
+        //tournament.quizId = this.aux.quizId;
+        console.log(this.aux.quizId);
       } catch (error) {
         await this.$store.dispatch('error', error);
       }

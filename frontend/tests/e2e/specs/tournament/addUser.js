@@ -1,10 +1,10 @@
 describe('Add User', () => {
 
   beforeEach(() => {
-    cy.demoAdminStudent();
+    cy.demoStudent();
   });
   afterEach(() => {
-    cy.get('[data-cy="logout"]').click()
+    cy.get('[data-cy="logoutButton"]').click()
   });
 
   it('student joins a tournament', () => {

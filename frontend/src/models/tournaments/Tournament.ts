@@ -1,16 +1,19 @@
 import Course from '@/models/user/Course';
 import Topic from '@/models/management/Topic';
+import User from "@/models/user/User";
 
 export default class Tournament {
   id: number | undefined;
   courseExecutionId: number = 11;
   status: string = 'CREATED';
-  startDate!: string | undefined;
+  startDate!: string;
   conclusionDate: string | undefined;
   numberOfQuestions: number | undefined;
   topics: number[] = [];
+  users: number[] = [] ;
   topicsAux: Topic[] = [];
   creatorId: number | undefined;
+  quizId: number = 0;
 
   constructor(jsonObj?: Tournament) {
     if (jsonObj) {
@@ -23,6 +26,9 @@ export default class Tournament {
       this.numberOfQuestions = jsonObj.numberOfQuestions;
       this.topics = jsonObj.topics;
       this.creatorId = jsonObj.creatorId;
+      this.users = jsonObj.users;
+      this.quizId = jsonObj.quizId;
+      console.log(this.quizId);
     }
   }
 }

@@ -492,9 +492,9 @@ where status = &apos;CREATED&apos;;</stringProp>
         <hashTree/>
         <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="JDBC Request" enabled="true">
           <stringProp name="dataSource">sampleReq</stringProp>
-          <stringProp name="query">DELETE FROM USERS_TOURNAMENTS WHERE USER_ID=721;
-DELETE FROM TOURNAMENTS_USERS WHERE USERS_ID=721;
-DELETE FROM TOURNAMENTS WHERE STATUS=&apos;OPENED&apos;;
+          <stringProp name="query">DELETE FROM USERS_TOURNAMENTS WHERE USER_ID=678 OR USER_ID=676;
+DELETE FROM TOURNAMENTS_USERS WHERE USERS_ID=678 OR USERS_ID=676;
+DELETE FROM TOURNAMENTS WHERE STATUS=&apos;OPENED&apos; AND ID = 4;
 </stringProp>
           <stringProp name="queryArguments"></stringProp>
           <stringProp name="queryArgumentsTypes"></stringProp>
