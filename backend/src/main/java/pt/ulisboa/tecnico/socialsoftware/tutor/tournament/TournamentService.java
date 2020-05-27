@@ -57,8 +57,8 @@ public class TournamentService {
     @Autowired
     private UserRepository userRepository;
 
-    @Autowired
-    QuizService quizService;
+    /*@Autowired
+    QuizService quizService;*/
 
 
     @PersistenceContext
@@ -125,21 +125,22 @@ public class TournamentService {
 
         User user = userRepository.findById(userId).orElseThrow(() ->new TutorException(USER_NOT_FOUND, userId));
         tournamentRepository.findById(tournamentId).get().addUser(user);
-        if(tournament.getQuiz() == null) {
+        /*if(tournament.getQuiz() == null) {
             if(tournament.getUsers().size() > 1){
                 tournament.setQuiz(generateQuiz(tournament));
                 System.out.println(tournament.getQuiz().getId());
             }
-        }
+        }*/
         entityManager.persist(tournament);
         TournamentDto tournamentDto = new TournamentDto(tournament);
 
         List<Integer> usersId = tournament.getUsers().stream().map(User::getId).collect(Collectors.toList());
         tournamentDto.setUsers(usersId);
-        tournamentDto.setQuizId(tournament.getQuiz().getId());
+        //tournamentDto.setQuizId(tournament.getQuiz().getId());
 
         return tournamentDto;
     }
+
 
     @Retryable(
             value = { SQLException.class },
@@ -167,7 +168,7 @@ public class TournamentService {
         tournamentRepository.delete(tournament);
 
     }
-
+/*
     @Transactional(isolation = Isolation.REPEATABLE_READ)
     public Quiz generateQuiz(Tournament tournament){
         Quiz quiz = new Quiz();
@@ -204,12 +205,10 @@ public class TournamentService {
         System.out.println(questions.size());
         for(Question quest : questions){
             quizService.addQuestionToQuiz(quest.getId(),quiz.getId());
-        }/*
-        IntStream.range(0,questions.size())
-                .forEach(index -> new QuizQuestion(quiz, questions.get(index), index));*/
+        }
         quizRepository.save(quiz);
         return quiz;
-    }
+    }*/
 
     @Transactional(isolation = Isolation.REPEATABLE_READ)
     public boolean numberOfQuestionsValid(Tournament tournament) {
