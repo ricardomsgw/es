@@ -94,14 +94,15 @@
                 <elementProp name="" elementType="HTTPArgument">
                   <boolProp name="HTTPArgument.always_encode">false</boolProp>
                   <stringProp name="Argument.value">{&#xd;
-  &quot;conclusionDate&quot;: &quot;2020-05-31 15:59&quot;,&#xd;
-  &quot;conclusionDateDate&quot;: &quot;2020-05-31T15:59:07.710Z&quot;,&#xd;
+  &quot;conclusionDate&quot;: &quot;2021-03-28 15:59&quot;,&#xd;
+  &quot;conclusionDateDate&quot;: &quot;2021-03-28T15:59:07.710Z&quot;,&#xd;
   &quot;courseExecutionId&quot;: 11,&#xd;
   &quot;courseId&quot;: 20,&#xd;
+  &quot;creatorId&quot;: 651,&#xd;
   &quot;numberOfQuestions&quot;: 3,&#xd;
-  &quot;startDate&quot;: &quot;2020-05-30 15:59&quot;,&#xd;
-  &quot;startDateDate&quot;: &quot;2020-05-30T15:51:07.710Z&quot;,&#xd;
-  &quot;status&quot;: &quot;CREATED&quot;,&#xd;
+  &quot;startDate&quot;: &quot;2021-03-28 15:59&quot;,&#xd;
+  &quot;startDateDate&quot;: &quot;2021-03-28T15:51:07.710Z&quot;,&#xd;
+  &quot;status&quot;: &quot;OPENED&quot;,&#xd;
   &quot;topics&quot;: [&#xd;
     82&#xd;
   ]&#xd;
@@ -127,7 +128,7 @@
           <hashTree>
             <JSONPathAssertion guiclass="JSONPathAssertionGui" testclass="JSONPathAssertion" testname="Assert tournament conclusion date" enabled="true">
               <stringProp name="JSON_PATH">$.conclusionDate</stringProp>
-              <stringProp name="EXPECTED_VALUE">2020-05-31 15:59</stringProp>
+              <stringProp name="EXPECTED_VALUE">2021-03-28 15:59</stringProp>
               <boolProp name="JSONVALIDATION">true</boolProp>
               <boolProp name="EXPECT_NULL">false</boolProp>
               <boolProp name="INVERT">false</boolProp>
@@ -136,7 +137,7 @@
             <hashTree/>
             <JSONPathAssertion guiclass="JSONPathAssertionGui" testclass="JSONPathAssertion" testname="Assert tournament conclusion date date" enabled="true">
               <stringProp name="JSON_PATH">$.conclusionDateDate</stringProp>
-              <stringProp name="EXPECTED_VALUE">[2020,5,31,15,59]</stringProp>
+              <stringProp name="EXPECTED_VALUE">[2021,3,28,15,59]</stringProp>
               <boolProp name="JSONVALIDATION">true</boolProp>
               <boolProp name="EXPECT_NULL">false</boolProp>
               <boolProp name="INVERT">false</boolProp>
@@ -163,7 +164,7 @@
             <hashTree/>
             <JSONPathAssertion guiclass="JSONPathAssertionGui" testclass="JSONPathAssertion" testname="Assert tournament start date" enabled="true">
               <stringProp name="JSON_PATH">$.startDate</stringProp>
-              <stringProp name="EXPECTED_VALUE">2020-05-30 15:59</stringProp>
+              <stringProp name="EXPECTED_VALUE">2021-03-28 15:59</stringProp>
               <boolProp name="JSONVALIDATION">true</boolProp>
               <boolProp name="EXPECT_NULL">false</boolProp>
               <boolProp name="INVERT">false</boolProp>
@@ -172,7 +173,7 @@
             <hashTree/>
             <JSONPathAssertion guiclass="JSONPathAssertionGui" testclass="JSONPathAssertion" testname="Assert tournament start date date" enabled="true">
               <stringProp name="JSON_PATH">$.startDateDate</stringProp>
-              <stringProp name="EXPECTED_VALUE">[2020,5,30,15,59]</stringProp>
+              <stringProp name="EXPECTED_VALUE">[2021,3,28,15,59]</stringProp>
               <boolProp name="JSONVALIDATION">true</boolProp>
               <boolProp name="EXPECT_NULL">false</boolProp>
               <boolProp name="INVERT">false</boolProp>
@@ -181,7 +182,7 @@
             <hashTree/>
             <JSONPathAssertion guiclass="JSONPathAssertionGui" testclass="JSONPathAssertion" testname="Assert tournament status" enabled="true">
               <stringProp name="JSON_PATH">$.status</stringProp>
-              <stringProp name="EXPECTED_VALUE">CREATED</stringProp>
+              <stringProp name="EXPECTED_VALUE">OPENED</stringProp>
               <boolProp name="JSONVALIDATION">true</boolProp>
               <boolProp name="EXPECT_NULL">false</boolProp>
               <boolProp name="INVERT">false</boolProp>
