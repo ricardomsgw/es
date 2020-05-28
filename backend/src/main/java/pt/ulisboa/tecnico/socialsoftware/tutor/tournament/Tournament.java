@@ -233,6 +233,9 @@ public class Tournament {
             throw new TutorException(TOURNAMENT_NOT_ELEGIBLE);
         if (this.getUsers().contains(user))
             throw new TutorException(TOURNAMENT_ALREADY_JOINED);
+        if ( user.getQuizAnswers().size() < 2){
+            throw new TutorException(TOURNAMENT_NOT_ENOUGH_QUIZ);
+        }
     }
 
     public Quiz getQuiz() { return quiz; }

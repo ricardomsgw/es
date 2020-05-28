@@ -4,17 +4,26 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
 import org.springframework.boot.test.context.TestConfiguration
 import org.springframework.context.annotation.Bean
+import pt.ulisboa.tecnico.socialsoftware.tutor.answer.domain.QuizAnswer
+import pt.ulisboa.tecnico.socialsoftware.tutor.answer.repository.QuizAnswerRepository
+import pt.ulisboa.tecnico.socialsoftware.tutor.config.DateHandler
 import pt.ulisboa.tecnico.socialsoftware.tutor.course.Course
 import pt.ulisboa.tecnico.socialsoftware.tutor.course.CourseExecution
 import pt.ulisboa.tecnico.socialsoftware.tutor.course.CourseExecutionRepository
 import pt.ulisboa.tecnico.socialsoftware.tutor.course.CourseRepository
 import pt.ulisboa.tecnico.socialsoftware.tutor.exceptions.ErrorMessage
 import pt.ulisboa.tecnico.socialsoftware.tutor.exceptions.TutorException
+import pt.ulisboa.tecnico.socialsoftware.tutor.question.domain.Option
 import pt.ulisboa.tecnico.socialsoftware.tutor.question.domain.Question
 import pt.ulisboa.tecnico.socialsoftware.tutor.question.domain.Topic
 import pt.ulisboa.tecnico.socialsoftware.tutor.question.dto.TopicDto
+import pt.ulisboa.tecnico.socialsoftware.tutor.question.repository.OptionRepository
 import pt.ulisboa.tecnico.socialsoftware.tutor.question.repository.QuestionRepository
 import pt.ulisboa.tecnico.socialsoftware.tutor.question.repository.TopicRepository
+import pt.ulisboa.tecnico.socialsoftware.tutor.quiz.domain.Quiz
+import pt.ulisboa.tecnico.socialsoftware.tutor.quiz.domain.QuizQuestion
+import pt.ulisboa.tecnico.socialsoftware.tutor.quiz.repository.QuizQuestionRepository
+import pt.ulisboa.tecnico.socialsoftware.tutor.quiz.repository.QuizRepository
 import pt.ulisboa.tecnico.socialsoftware.tutor.user.User
 import pt.ulisboa.tecnico.socialsoftware.tutor.user.UserRepository
 import spock.lang.Specification
@@ -56,6 +65,18 @@ class JoinTournamentTest extends Specification {
     @Autowired
     QuestionRepository questionRepository
 
+    @Autowired
+    QuizRepository quizRepository
+
+    @Autowired
+    QuizQuestionRepository quizQuestionRepository
+
+    @Autowired
+    QuizAnswerRepository quizAnswerRepository
+
+    @Autowired
+    OptionRepository optionRepository
+
     def user1
     def user2
     def course
@@ -67,6 +88,11 @@ class JoinTournamentTest extends Specification {
     def conclusionDate
     def formatter
     def topicDto
+    def question
+    def optionOk
+    def optionKo
+    def quizAnswer
+    def quizAnswer2
 
     def setup(){
         course = new Course(COURSE_NAME, Course.Type.TECNICO)
@@ -106,6 +132,15 @@ class JoinTournamentTest extends Specification {
 
 
 
+        quizAnswer = new QuizAnswer()
+        quizAnswer.setUser(user1)
+
+        quizAnswer2 = new QuizAnswer()
+        quizAnswer2.setUser(user1)
+
+        userRepository.save(user1)
+        quizAnswerRepository.save(quizAnswer)
+        quizAnswerRepository.save(quizAnswer2)
     }
 
     private Tournament CreateOpenTournament(CourseExecution courseExecution) {
@@ -175,7 +210,6 @@ class JoinTournamentTest extends Specification {
         def exception = thrown(TutorException)
         exception.getErrorMessage() == ErrorMessage.TOURNAMENT_NOT_OPEN
     }
-
 
     def "user not a student tries to join a tournament"(){
         given:

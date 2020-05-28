@@ -32,6 +32,7 @@ public enum ErrorMessage {
     QUIZ_QUESTION_NOT_FOUND("Quiz question not found with id %d"),
     TOPIC_CONJUNCTION_NOT_FOUND("Topic Conjunction not found with id %d"),
 
+    TOURNAMENT_NOT_ENOUGH_QUIZ("User hasn't completed 2 quizzes yet."),
     TOURNAMENT_INVALID_CREATOR("User can not create tournaments of this course"),
     TOURNAMENT_ALREADY_JOINED("User already joined this tournament"),
     TOURNAMENT_NOT_OPEN("Tournament is not open"),
