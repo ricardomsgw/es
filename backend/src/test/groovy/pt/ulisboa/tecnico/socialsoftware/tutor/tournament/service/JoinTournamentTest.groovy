@@ -67,8 +67,10 @@ class JoinTournamentTest extends Specification {
     def conclusionDate
     def formatter
     def topicDto
+    def quiz
 
     def setup(){
+
         course = new Course(COURSE_NAME, Course.Type.TECNICO)
         courseExecution = new CourseExecution(course, ACRONYM, ACADEMIC_TERM, Course.Type.TECNICO)
         courseRepository.save(course)
@@ -141,6 +143,21 @@ class JoinTournamentTest extends Specification {
 
         then:
         result.getUsers().size() == 2;
+    }
+
+    def "student joins open tournament with quizzes equal 1"(){
+        given:
+        user1.setRole(User.Role.STUDENT)
+        user1.addCourseExecutions(courseExecution)
+        user2.setNumberOfStudentQuizzes(1);
+        def tournamentId = tournamentRepository.findAll().get(0).getId()
+        def userId = userRepository.findAll().get(0).getId()
+        when:
+        def result = tournamentService.addUser(userId, tournamentId);
+
+        then:
+        def exception = thrown(TutorException)
+        exception.getErrorMessage() == ErrorMessage.STUDENT_HAVE_TO_ANSWER_2_QUIZZES
     }
     def "student is already in tournament"(){
         given:

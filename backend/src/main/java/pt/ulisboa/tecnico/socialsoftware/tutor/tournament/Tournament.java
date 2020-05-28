@@ -211,14 +211,20 @@ public class Tournament {
     
     public void addUser(User user) {
         checkToAddUser(user);
-        users.add(user);
-        user.addTournaments(this);
-        if(this.quiz != null) {
+        if(user.getNumberOfStudentQuizzes() > 2) {
+            users.add(user);
+            user.addTournaments(this);
+        }
+        else {
+            throw new TutorException(STUDENT_HAVE_TO_ANSWER_2_QUIZZES);
+        }
+        /*if(this.quiz != null) {
             return;
         }
         else if( this.users.size() > 1 ){
             generateQuiz();
-        }
+        }*/
+
     }
 
 

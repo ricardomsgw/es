@@ -45,6 +45,7 @@ public enum ErrorMessage {
     TOURNAMENT_IS_NOT_CREATED("Tournament is not created"),
     TOURNAMENT_TOPICS_ARE_NOT_VALID("Topics of the tournament are not valid"),
     TOURNAMENT_NOT_FOUND("Tournament not found"),
+    STUDENT_HAVE_TO_ANSWER_2_QUIZZES("Student has to answer 2 quizzes (at less)"),
     USER_NOT_CREATOR("User can only cancel tournaments created by himself"),
 
     TOPIC_NOT_FOUND("Topic not found with id %d"),
