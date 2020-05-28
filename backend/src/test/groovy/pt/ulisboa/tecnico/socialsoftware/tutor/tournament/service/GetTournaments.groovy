@@ -65,6 +65,7 @@ class GetTournaments extends Specification{
     def topic
     def courseExecutionId
     def user
+    def topicDto
 
     def setup() {
         formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")
@@ -74,7 +75,9 @@ class GetTournaments extends Specification{
         course = new Course(COURSE_NAME, Course.Type.TECNICO)
         courseRepository.save(course)
 
-        topic = new Topic()
+        TopicDto topicDto = new TopicDto();
+        topicDto.setName("NEWTOPIC");
+        topic = new Topic(course,topicDto);
         //topic.setId(1)
         topicRepository.save(topic)
         courseExecution = new CourseExecution(course, ACRONYM, ACADEMIC_TERM, Course.Type.TECNICO)
@@ -86,6 +89,8 @@ class GetTournaments extends Specification{
 
         User.Role role = User.Role.STUDENT
         user.setRole(role)
+        user.setKey(1)
+        userRepository.save(user)
         user.addCourseExecutions(courseExecution)
 
         currentDate = LocalDateTime.now()
@@ -140,6 +145,7 @@ class GetTournaments extends Specification{
         tournament.setStartDate(startDate.format(formatter))
         tournament.setCurrentDate(currentDate.format(formatter))
         tournament.setConclusionDate(conclusionDate.format(formatter))
+        tournament.setCreatorId(user.getId());
         def resultTournament = tournamentService.createTournament((TournamentDto) tournament)
         tournamentRepository.findById(resultTournament.getId()).get().setStatus(Tournament.Status.OPENED)
     }
